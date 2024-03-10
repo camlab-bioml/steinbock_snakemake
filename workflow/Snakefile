@@ -1,14 +1,42 @@
 configfile: "config/config.yaml"
-workdir: "/home/tiakju/SynologyDrive/JacksonLab/pdac_projects/steinbock_snakemake"
+workdir: "/home/tiakju/mnt/crucial/SynologyDrive/pdac_projects/steinbock_snakemake"
 
-mcd_folders = config['mcd_folders']
+projects = config['projects']
 
-# Import rules
-include: "rules/preprocess_panel.smk"
+# Rule Group 1: Preprocessing IMC Files
+include: "rules/create_panel.smk"
 include: "rules/generate_tiff.smk"
+
+# Rule Group 2: Ilastik semantic classification
+include: "rules/ilastik_prepare.smk"
+include: "rules/ilastik_run.smk"
+
+# Rule Group 3: CellProfiler
+include: "rules/cellprofiler_prepare.smk"
+include: "rules/cellprofiler_run.smk"
+
+# Rule Group 4: DeepCell
+include: "rules/deepcell_wholecell.smk"
+include: "rules/deepcell_nuclei.smk"
+
 
 rule all:
     input:
-        expand("raw/{mcd_folders}/panel.csv", mcd_folders = mcd_folders),
-        directory(expand("raw/{mcd_folders}/img", mcd_folders = mcd_folders)),
-        expand("raw/{mcd_folders}/img/images.csv", mcd_folders = mcd_folders),
+        # Rule Group 1 : Outputs of Preprocessing IMC files
+        expand("data/{projects}/panel.csv", projects = projects),
+        expand("data/{projects}/img", projects = projects),
+        expand("data/{projects}/img/images.csv", projects = projects),
+
+        # Rule Group 2 : Ilastik Pixel Classifier
+        expand("data/{projects}/ilastik/ilastik_img", projects = projects),
+        expand("data/{projects}/ilastik/ilastik_crop", projects = projects),
+        expand("data/{projects}/ilastik/pixel_classifier.ilp", projects = projects),
+        # expand("data/{projects}/ilastik/ilastik_probabilities", projects = projects), # This will require a pre-trained ilastik file. 
+
+        # Rule Group 3 : CellProfiler 
+        expand("data/{projects}/cellprofiler/cell_segmentation.cppipe", projects = projects),
+        # expand("data/{projects}/cellprofiler/masks", projects = projects), # This will require a trained cellprofiler file. 
+
+        # Rule Group 4 : Mesmer Cell & Nuclei Segmentation
+        expand("data/{projects}/deepcell/whole_cell", projects = projects),
+        expand("data/{projects}/deepcell/nuclei", projects = projects),

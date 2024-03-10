@@ -1,0 +1,2 @@
+image,width_px,height_px,num_channels,source_file,recovery_file,recovered,acquisition_id,acquisition_description,acquisition_start_x_um,acquisition_start_y_um,acquisition_end_x_um,acquisition_end_y_um,acquisition_width_um,acquisition_height_um
+test_007.tiff,500,500,12,test.mcd,,False,7,3plex_bxpc3,8927.0,8756.0,9427.0,8256.0,500.0,500.0

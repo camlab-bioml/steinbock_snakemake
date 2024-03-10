@@ -1,2 +1,24 @@
-mcd_folders:
-  - BXPC3_SAT_TEST
+projects:
+  - test_mcd
+
+
+# Rule Group 1 : Options for preprocessing IMC Files
+# Hot pixel filter
+hpf: 5 # hot pixel filter
+
+# Rule Group 2 : Ilastik pixel classification options
+cropsize: 512
+seed: 123
+meanfactor: 100
+scale: 2
+
+# Rule Group 3 : CellProfiler
+# No additional settings
+
+# Rule Grouop 4 : Deepcell
+deepcell_app: "mesmer"
+deepcell_model: "MultiplexSegmentation"
+deepcell_modelpath: ""
+deepcell_pxsize: 1
+deepcell_preprocess:
+deepcell_postprocess:

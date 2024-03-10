@@ -1,9 +1,18 @@
 rule generate_tiff:
     input:
-        a = rules.preprocess_panel.output,
-        b = "raw/{mcd_folders}/mcd"
+        a = rules.create_panel.output,
+        b = "data/{projects}/mcd"
+    params:
+        hpf = config['hpf']
     output:
-        place = directory("raw/{mcd_folders}/img"),
-        stats = "raw/{mcd_folders}/img/images.csv"
+        place = "data/{projects}/img",
+        stats = "data/{projects}/img/images.csv"
     shell:
-        "steinbock preprocess imc images --mcd {input.b} --panel {input.a} --imgout {output.place} --infoout {output.stats}"
+        """
+        steinbock preprocess imc images --mcd {input.b} \
+                                        --panel {input.a} \
+                                        --imgout {output.place} \
+                                        --hpf {params.hpf} \
+                                        --infoout {output.stats} \
+                                        --txt {input.b}
+        """
