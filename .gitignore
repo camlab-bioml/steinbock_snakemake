@@ -12,15 +12,3 @@
 *.log
 
 .snakemake*
-
-.snakemake/
-.cache/
-.keras/
-.config/
-.snakemake/metadata/ZGF0YS90ZXN0X21jZC9wYW5lbC5jc3Y=
-.snakemake/metadata/ZGF0YS90ZXN0X21jZC9jZWxscHJvZmlsZXIvY2VsbF9zZWdtZW50YXRpb24uY3BwaXBl
-.snakemake/metadata/ZGF0YS90ZXN0X21jZC9pbGFzdGlrL2lsYXN0aWtfaW1n
-.snakemake/metadata/ZGF0YS90ZXN0X21jZC9pbGFzdGlrL2lsYXN0aWtfY3JvcA==
-.snakemake/metadata/ZGF0YS90ZXN0X21jZC9pbWc=
-.snakemake/metadata/ZGF0YS90ZXN0X21jZC9pbWcvaW1hZ2VzLmNzdg==
-.snakemake/metadata/ZGF0YS90ZXN0X21jZC9wYW5lbC5jc3Y=
