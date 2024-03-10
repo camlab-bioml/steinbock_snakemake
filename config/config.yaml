@@ -1,9 +1,5 @@
 projects:
-<<<<<<< HEAD
   - test_mcd_2
-=======
-  - test_mcd
->>>>>>> 85e6d31392eca4a36304a86dc672577795fd99a7
 
 # Rule Group 1 : Options for preprocessing IMC Files
 # Hot pixel filter
@@ -20,10 +16,7 @@ python_path: "/opt/cellprofiler-venv/bin/python"
 plugins_path: "/opt/cellprofiler_plugins"
 
 # Rule Group 4 : Deepcell
-<<<<<<< HEAD
 cytoplasm: "Gd160 Ho165"
-=======
->>>>>>> 85e6d31392eca4a36304a86dc672577795fd99a7
 deepcell_app: "mesmer"
 deepcell_model: "MultiplexSegmentation"
 deepcell_modelpath: "/opt/keras/models"
