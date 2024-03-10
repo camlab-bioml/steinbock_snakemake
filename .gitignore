@@ -6,13 +6,12 @@
 *.svg
 *.sif
 *.json
-<<<<<<< HEAD
 *.h5
 *.h5ad
 *.csv
+*.log
 
 .snakemake*
-=======
 
 .snakemake/
 .cache/
@@ -25,4 +24,3 @@
 .snakemake/metadata/ZGF0YS90ZXN0X21jZC9pbWc=
 .snakemake/metadata/ZGF0YS90ZXN0X21jZC9pbWcvaW1hZ2VzLmNzdg==
 .snakemake/metadata/ZGF0YS90ZXN0X21jZC9wYW5lbC5jc3Y=
->>>>>>> 85e6d31392eca4a36304a86dc672577795fd99a7
