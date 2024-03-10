@@ -7,11 +7,19 @@ include: "rules/01_create_panel.smk"
 include: "rules/01_generate_tiff.smk"
 
 # Rule Group 2: Ilastik semantic classification
+<<<<<<< HEAD
 # include: "rules/02_ilastik_prepare.smk"
 # include: "rules/02_ilastik_run.smk"
 
 # Rule Group 3: CellProfiler
 # include: "rules/03_cellprofiler_prepare.smk"
+=======
+include: "rules/02_ilastik_prepare.smk"
+# include: "rules/02_ilastik_run.smk"
+
+# Rule Group 3: CellProfiler
+include: "rules/03_cellprofiler_prepare.smk"
+>>>>>>> 85e6d31392eca4a36304a86dc672577795fd99a7
 # include: "rules/03_cellprofiler_run.smk"
 
 # Rule Group 4: DeepCell
