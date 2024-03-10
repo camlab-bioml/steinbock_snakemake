@@ -1,0 +1,14 @@
+configfile: "config/config.yaml"
+workdir: "/home/tiakju/SynologyDrive/JacksonLab/pdac_projects/steinbock_snakemake"
+
+mcd_folders = config['mcd_folders']
+
+# Import rules
+include: "rules/preprocess_panel.smk"
+include: "rules/generate_tiff.smk"
+
+rule all:
+    input:
+        expand("raw/{mcd_folders}/panel.csv", mcd_folders = mcd_folders),
+        directory(expand("raw/{mcd_folders}/img", mcd_folders = mcd_folders)),
+        expand("raw/{mcd_folders}/img/images.csv", mcd_folders = mcd_folders),

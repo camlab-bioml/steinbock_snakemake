@@ -1,0 +1,9 @@
+image,width_px,height_px,num_channels,source_file,recovery_file,recovered,acquisition_id,acquisition_description,acquisition_start_x_um,acquisition_start_y_um,acquisition_end_x_um,acquisition_end_y_um,acquisition_width_um,acquisition_height_um
+chr_3plex_007.tiff,500,500,12,chr_3plex.mcd,,False,7,3plex_bxpc3,8927.0,8756.0,9427.0,8256.0,500.0,500.0
+chr2_p50_test_Gd158_X_009.tiff,500,500,12,chr2_p50_test_Gd158_X.mcd,,False,9,chr2-h5050-Gd158,34794.767,8451.228,35294.767,7951.228,500.0,500.0
+chr2_p50_ctrl_Gd158_X_013.tiff,500,500,12,chr2_p50_ctrl_Gd158_X.mcd,,False,13,h54_ctrl_Dy162,22890.208,17040.084,23390.208,16540.084,500.0,500.0
+chr1_p38_test_Er167_012.tiff,500,500,12,chr1_p38_test_Er167.mcd,,False,12,h38_ctrl_Er167,37471.306,16791.377,37971.306,16291.377,500.0,500.0
+chr1_p38_ctrl_Er167_010.tiff,500,500,12,chr1_p38_ctrl_Er167.mcd,,False,10,chr1-h3838-Er167,48450.618,8753.414,48950.618,8253.414,500.0,500.0
+chr10_p54_test_Dy162_008.tiff,500,500,12,chr10_p54_test_Dy162.mcd,,False,8,chr10-h5454-Dy162,19534.544,8469.916,20034.544,7969.916,500.0,500.0
+chr10_p54_ctrl_Dy162_014.tiff,500,500,12,chr10_p54_ctrl_Dy162.mcd,,False,14,h50_ctrl_Gd158,10234.357,16540.084,10734.357,16040.084,500.0,500.0
+Ir_only_011.tiff,500,500,12,Ir_only.mcd,,False,11,Ir,48415.827,15740.484,48915.827,15240.484,500.0,500.0
