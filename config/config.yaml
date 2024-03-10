@@ -1,6 +1,5 @@
 projects:
-  - test_mcd
-
+  - test_mcd_2
 
 # Rule Group 1 : Options for preprocessing IMC Files
 # Hot pixel filter
@@ -13,12 +12,18 @@ meanfactor: 100
 scale: 2
 
 # Rule Group 3 : CellProfiler
-# No additional settings
+python_path: "/opt/cellprofiler-venv/bin/python"
+plugins_path: "/opt/cellprofiler_plugins"
 
-# Rule Grouop 4 : Deepcell
+# Rule Group 4 : Deepcell
+cytoplasm: "Gd160 Ho165"
 deepcell_app: "mesmer"
 deepcell_model: "MultiplexSegmentation"
-deepcell_modelpath: ""
+deepcell_modelpath: "/opt/keras/models"
 deepcell_pxsize: 1
-deepcell_preprocess:
-deepcell_postprocess:
+
+# Rule Group 5 :
+aggr: "median"
+neighbor_type: "borders"
+dmax: 15
+kmax: 5

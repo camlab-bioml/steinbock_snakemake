@@ -1,24 +1,31 @@
 configfile: "config/config.yaml"
-workdir: "/home/tiakju/mnt/crucial/SynologyDrive/pdac_projects/steinbock_snakemake"
 
 projects = config['projects']
 
 # Rule Group 1: Preprocessing IMC Files
-include: "rules/create_panel.smk"
-include: "rules/generate_tiff.smk"
+include: "rules/01_create_panel.smk"
+include: "rules/01_generate_tiff.smk"
 
 # Rule Group 2: Ilastik semantic classification
-include: "rules/ilastik_prepare.smk"
-include: "rules/ilastik_run.smk"
+# include: "rules/02_ilastik_prepare.smk"
+# include: "rules/02_ilastik_run.smk"
 
 # Rule Group 3: CellProfiler
-include: "rules/cellprofiler_prepare.smk"
-include: "rules/cellprofiler_run.smk"
+# include: "rules/03_cellprofiler_prepare.smk"
+# include: "rules/03_cellprofiler_run.smk"
 
 # Rule Group 4: DeepCell
-include: "rules/deepcell_wholecell.smk"
-include: "rules/deepcell_nuclei.smk"
+include: "rules/04_deepcell_prepare.smk"
+include: "rules/04_deepcell_wholecell.smk"
+include: "rules/04_deepcell_nuclei.smk"
 
+# Rule Group 5: Extract Features
+include: "rules/05_extract_intensities.smk"
+include: "rules/05_extract_regionprops.smk"
+include: "rules/05_extract_neighbors.smk"
+
+# Rule Group 6: Export data
+include: "rules/06_export_all.smk"
 
 rule all:
     input:
@@ -28,15 +35,25 @@ rule all:
         expand("data/{projects}/img/images.csv", projects = projects),
 
         # Rule Group 2 : Ilastik Pixel Classifier
-        expand("data/{projects}/ilastik/ilastik_img", projects = projects),
-        expand("data/{projects}/ilastik/ilastik_crop", projects = projects),
-        expand("data/{projects}/ilastik/pixel_classifier.ilp", projects = projects),
+        # expand("data/{projects}/ilastik/ilastik_img", projects = projects),
+        # expand("data/{projects}/ilastik/ilastik_crop", projects = projects),
+        # expand("data/{projects}/ilastik/pixel_classifier.ilp", projects = projects),
         # expand("data/{projects}/ilastik/ilastik_probabilities", projects = projects), # This will require a pre-trained ilastik file. 
 
         # Rule Group 3 : CellProfiler 
-        expand("data/{projects}/cellprofiler/cell_segmentation.cppipe", projects = projects),
+        # expand("data/{projects}/cellprofiler/cell_segmentation.cppipe", projects = projects),
         # expand("data/{projects}/cellprofiler/masks", projects = projects), # This will require a trained cellprofiler file. 
 
         # Rule Group 4 : Mesmer Cell & Nuclei Segmentation
+        expand("data/{projects}/panel_deepcell.csv", projects = projects),
         expand("data/{projects}/deepcell/whole_cell", projects = projects),
         expand("data/{projects}/deepcell/nuclei", projects = projects),
+
+        # Rule Group 5 : Extract segmentation features
+        expand("data/{projects}/deepcell/intensities", projects = projects),
+        expand("data/{projects}/deepcell/regionprops", projects = projects),
+        expand("data/{projects}/deepcell/neighbors", projects = projects),
+
+        # Rule Group 6 : Export Annadata
+        expand("data/{projects}/export", projects = projects),
+        expand("data/{projects}/export/{projects}.h5ad", projects = projects)

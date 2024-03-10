@@ -3,3 +3,10 @@
 *.png
 *.ipynb
 *.log
+*.svg
+*.sif
+*.json
+*.h5
+*.h5ad
+
+.snakemake*
