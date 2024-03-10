@@ -3,10 +3,12 @@ rule create_panel:
         "data/{projects}/mcd"
     output:
         "data/{projects}/panel.csv"
+    singularity:
+        "workflow/envs/steinbock-gpu.sif"
     shell:
         """
         steinbock preprocess imc panel \
-            -v INFO \
+            --mcd {input} \
             -o {output} \
-            --mcd {input}
+            --verbosity INFO
         """

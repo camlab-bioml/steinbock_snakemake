@@ -3,17 +3,17 @@ rule cellprofiler_run:
         prepare = rules.cellprofiler_prepare.output,
         probabs = rules.ilastik_run.output.probabilities
     params:
-        python_path = "",
-        cellprofiler_module = "",
-        plugins_dir = ""
+        python_path = config["python_path"],
+        plugins_dir = config["plugins_path"]
     output:
-        "data/{projects}/cellprofiler/masks"
+        "~/steinbock_snakemake/data/{projects}/cellprofiler/masks"
+    singularity:
+        "workflow/envs/steinbock-gpu.sif"
     shell:
         """
             steinbock segment cellprofiler run \
-                    --python \
-                    --cellprofiler \
-                    --plugins-directory \
+                    --python {params.python_path} \
+                    --plugins-directory {params.plugins_dir} \
                     --pipe {input.prepare} \
                     --probabs {input.probabs} \
                     -o {output}
