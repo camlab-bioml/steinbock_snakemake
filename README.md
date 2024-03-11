@@ -135,22 +135,16 @@ This concludes this tutorial!
 └── 📁test_mcd
     └── 📁deepcell # outputs for deepcell segmentation and masks per ROI
         └── 📁intensities
-            └── .snakemake_timestamp
             └── test_018.csv
         └── 📁neighbors
-            └── .snakemake_timestamp
             └── test_018.csv
         └── 📁nuclei
-            └── .snakemake_timestamp
             └── test_018.tiff
         └── 📁regionprops
-            └── .snakemake_timestamp
             └── test_018.csv
         └── 📁whole_cell
-            └── .snakemake_timestamp
             └── test_018.tiff
     └── 📁export # Exports per channel tiff for each ROI, an ome.tiff file and a anndata object
-        └── .snakemake_timestamp
         └── 📁test_018
             └── ArAr80_80ArAr.tiff
             └── Dy162_162Dy_h5454_Chr10SAT.tiff
@@ -168,7 +162,6 @@ This concludes this tutorial!
         └── test_018.ome.tiff
         └── test_mcd.h5ad
     └── 📁img # Multichannel Tiff folder
-        └── .snakemake_timestamp
         └── images.csv
         └── test_018.tiff
     └── 📁mcd
