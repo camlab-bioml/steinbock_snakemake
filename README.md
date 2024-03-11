@@ -1,16 +1,21 @@
 # Steinbock-snakemake v0.0.1
 
+## Pipeline overview
+This steinbock pipeline uses mesmer to segment cells and nuclei, generate neighbors and finally outputs files required for downstream analysis. 
+
+![DAG](dag.png)
+
 ## Set-up pipeline environment (via conda, pipenv)
 
 We will first set up the pipeline environment via conda. This will install all dependencies including snakemake and singularity for use.
 
 ```
-git clone <steinbock-snakemake> && cd steinbock_snakemake # clone git repo, then move into the pipeline folder. 
+git clone https://github.com/ttj131/steinbock_snakemake && cd steinbock_snakemake # clone git repo, then move into the pipeline folder. 
 conda env create -y --file=workflow/env/environment.yml
 conda activate steinbock-snakemake
 ```
 
-Alternatively we can use pipenv to just install snakemake given support for singularity in a cluster environment. (Not recoomended)
+Alternatively we can use pipenv to just install snakemake given support for singularity in a cluster environment. (Not recommended)
 ```
 pipenv install -r workflow/env/requirements.txt 
 ```
