@@ -6,7 +6,7 @@ We will first set up the pipeline environment via conda. This will install all d
 
 ```
 git clone <steinbock-snakemake> && cd steinbock_snakemake # clone git repo, then move into the pipeline folder. 
-conda create env -y ---name steinbock-snakemake --file=workflow/env/environment.yml
+conda create env -y --file=workflow/env/environment.yml
 conda activate steinbock-snakemake
 ```
 
