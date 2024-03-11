@@ -15,13 +15,13 @@ hpf: 5 # hot pixel filter
 # plugins_path: "/opt/cellprofiler_plugins"
 
 # Rule Group 4 : Deepcell
-cytoplasm: "Gd160 Ho165"
+cytoplasm: "Gd158"
 deepcell_app: "mesmer"
 deepcell_model: "MultiplexSegmentation"
 deepcell_modelpath: "/opt/keras/models"
 deepcell_pxsize: 1
 
-# Rule Group 5 :
+# Rule Group 5 : Export Regions Metrics
 aggr: "median"
 neighbor_type: "borders"
 dmax: 15

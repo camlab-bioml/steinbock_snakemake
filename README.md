@@ -87,7 +87,7 @@ projects:
 ### Channels for segmenting cells
 To help mesmer segment cells, steinbock will require the user to input the mass channels for cytoplasm specific markers (e.g panCK, Actin etc). You should include those channels under `cytoplasm` in Rule Group 4.
 ```
-cytoplasm: "Gd160 Ho165" # <-- add mass channels that corresspond to the cytoplasm
+cytoplasm: "Gd158" # <-- add mass channels that corresspond to the cytoplasm
 deepcell_app: "mesmer"
 deepcell_model: "MultiplexSegmentation"
 deepcell_modelpath: "/opt/keras/models"
