@@ -10,7 +10,7 @@ rule deepcell_wholecell:
     output:
         directory("data/{projects}/deepcell/whole_cell")
     singularity:
-        "workflow/envs/steinbock-gpu.sif"
+        config["container"]
     threads: 24
     shell:
         """

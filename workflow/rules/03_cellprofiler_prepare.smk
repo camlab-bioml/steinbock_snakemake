@@ -4,7 +4,7 @@ rule cellprofiler_prepare:
     output:
         "data/{projects}/cellprofiler/cell_segmentation.cppipe"
     singularity:
-        "workflow/envs/steinbock-gpu.sif"
+        config["container"]
     shell:
         """
             steinbock segment cellprofiler prepare \

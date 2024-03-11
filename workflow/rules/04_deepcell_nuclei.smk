@@ -10,7 +10,7 @@ rule deepcell_nuclei:
     output:
         directory("data/{projects}/deepcell/nuclei")
     singularity:
-        "workflow/envs/steinbock-gpu.sif"
+        config["container"]
     threads: 24
     shell:
         """

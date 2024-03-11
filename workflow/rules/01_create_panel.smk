@@ -4,7 +4,7 @@ rule create_panel:
     output:
         "data/{projects}/panel.csv"
     singularity:
-        "workflow/envs/steinbock-gpu.sif"
+        config["container"]
     shell:
         """
         steinbock preprocess imc panel \

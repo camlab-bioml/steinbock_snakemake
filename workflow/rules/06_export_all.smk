@@ -13,7 +13,7 @@ rule export_all:
         dir = directory("data/{projects}/export"),
         anndata = "data/{projects}/export/{projects}.h5ad"
     singularity:
-        "workflow/envs/steinbock-gpu.sif"
+        config["container"]
     threads: 24
     shell:
         """

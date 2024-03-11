@@ -12,7 +12,7 @@ rule ilastik_prepare:
         crop = directory("data/{projects}/ilastik/ilastik_crop"),
         ilp = "data/{projects}/ilastik/pixel_classifier.ilp"
     singularity:
-        "workflow/envs/steinbock-gpu.sif"
+        config["container"]
     shell:
         """
             steinbock classify ilastik prepare \

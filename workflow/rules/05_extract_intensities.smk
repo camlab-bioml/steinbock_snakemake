@@ -8,7 +8,7 @@ rule extract_intensities:
     output:
         directory("data/{projects}/deepcell/intensities")
     singularity:
-        "workflow/envs/steinbock-gpu.sif"
+        config["container"]
     threads: 24
     shell:
         """

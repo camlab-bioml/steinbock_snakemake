@@ -8,7 +8,7 @@ rule cellprofiler_run:
     output:
         "~/steinbock_snakemake/data/{projects}/cellprofiler/masks"
     singularity:
-        "workflow/envs/steinbock-gpu.sif"
+        config["container"]
     shell:
         """
             steinbock segment cellprofiler run \

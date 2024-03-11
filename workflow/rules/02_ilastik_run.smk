@@ -5,7 +5,7 @@ rule ilastik_run:
     output:
         probabilities = directory("data/{projects}/ilastik/ilastik_probabilities")
     singularity:
-        "workflow/envs/steinbock-gpu.sif"
+        config["container"]
     threads: 4
     resources:
         mem_mb = 16000

@@ -8,7 +8,7 @@ rule generate_tiff:
         place = directory("data/{projects}/img"),
         stats = "data/{projects}/img/images.csv"
     singularity:
-        "workflow/envs/steinbock-gpu.sif"
+        config["container"]
     shell:
         """
         steinbock preprocess imc images --mcd {input.b} \

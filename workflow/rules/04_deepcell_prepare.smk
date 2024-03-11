@@ -7,7 +7,7 @@ rule deepcell_prepare:
         script = "workflow/scripts/deepcell_prepare.py",
         cytoplasm = config["cytoplasm"]
     singularity:
-        "workflow/envs/steinbock-gpu.sif"
+        config["container"]
     shell:
         """
         python {params.script} \

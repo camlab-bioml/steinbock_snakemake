@@ -8,7 +8,7 @@ rule extract_neighbors:
     output:
         directory("data/{projects}/deepcell/neighbors")
     singularity:
-        "workflow/envs/steinbock-gpu.sif"
+        config["container"]
     threads: 24
     shell:
         """

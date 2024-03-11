@@ -6,7 +6,7 @@ We will first set up the pipeline environment via conda. This will install all d
 
 ```
 git clone <steinbock-snakemake> && cd steinbock_snakemake # clone git repo, then move into the pipeline folder. 
-conda create env -y --file=workflow/env/environment.yml
+conda env create -y --file=workflow/env/environment.yml
 conda activate steinbock-snakemake
 ```
 
@@ -21,25 +21,24 @@ pipenv install -r workflow/env/requirements.txt
 After successful creation of the environment, we will then generate a singularity container for use with the snakemake pipeline. This container will require about ~4GB of storage, and will be located under workflow/envs
 
 ```
-singularity pull docker://ghcr.io/bodenmillergroup/steinbock:0.16.1 workflow/envs/steinbock-cpu.sif
+cd workflow/env
+singularity pull steinbock-cpu.sif docker://ghcr.io/bodenmillergroup/steinbock:0.16.1
 ```
 
 ### Cloning GPU-based container (Not Recommended)
-This will clone the GPU container for steinbock. Note, you will require `nvidia-container-toolkit` and require CUDA drivers to run the pipeline. Only use this for large datasets that require GPU support.
+This will clone the GPU container for steinbock. Note, you will require `nvidia-container-toolkit` and require CUDA drivers (CUDA 11.8) to run the pipeline. Only use this for large datasets that require GPU support.
 ```
-singularity pull docker://ghcr.io/bodenmillergroup/steinbock:0.16.1-gpu workflow/envs/steinbock-cpu.sif
+cd workflow/env
+singularity pull steinbock-gpu.sif docker://ghcr.io/bodenmillergroup/steinbock:0.16.1-gpu
 ```
 
 ## Running Steinbock-snakemake
 
 ### Data input and output structures
-Now that the containers and environment is set-up, we will run and test the pipeline on a small mcd file. The structure of a completed pipeline:
+Now that the containers and environment is set-up, we will run and test the pipeline on a small mcd file. This is the structure of the input folder:
 ```
 ── 📁data
     └── 📁test_mcd
-        └── 📁deepcell # Folder for all deepcell outputs
-        └── 📁export # Folder for steinbock outputs. Will output a h5ad per ROI.
-        └── 📁img # Folder for tiff image stacks
         └── 📁mcd # Folder for you XTi mcd file or Hyperion mcd file. .txt files are also supported.
             └── test.mcd
 ```
@@ -81,7 +80,7 @@ Under the `projects` configuration, add your folder name and the pipeline will p
 ```
 projects:
     - test_mcd
-    - myproject # add the folder name to your project
+    # - myproject # <-- add the folder name to your project
 ```
 
 ### Channels for segmenting cells
@@ -91,7 +90,7 @@ cytoplasm: "Gd158" # <-- add mass channels that corresspond to the cytoplasm
 deepcell_app: "mesmer"
 deepcell_model: "MultiplexSegmentation"
 deepcell_modelpath: "/opt/keras/models"
-deepcell_pxsize: 1
+deepcell_pxsize: 1 # <-- pixel sizes for deepcell, default 1 um for IMC images. 
 ```
 
 ### Extracting features

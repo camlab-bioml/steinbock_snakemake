@@ -7,7 +7,7 @@ rule extract_regionprops:
     output:
         directory("data/{projects}/deepcell/regionprops")
     singularity:
-        "workflow/envs/steinbock-gpu.sif"
+        config["container"]
     threads: 24
     shell:
         """
