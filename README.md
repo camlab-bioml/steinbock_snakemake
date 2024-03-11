@@ -119,6 +119,56 @@ After completing the preflight configuration, we can run the pipeline. The `snak
 ```
 cd /home/tiakju/test_folder/steinbock_snakemake # path to where steinbock-snakemake is cloned
 
-snakemake -c 4 --use-singularity --singularity-args "-B /home/tiakju/test_folder/steinbock_snakemake" --configfile data/test_mcd/test_mcd.yaml
+snakemake -c 4 --use-singularity --singularity-args "-B /home/tiakju/mnt/crucial/SynologyDrive/pdac_projects/steinbock_snakemake" --configfile data/test_mcd/test_mcd.yaml
 ```
 
+### Inspect pipeline outputs
+
+This concludes this tutorial!
+
+```
+└── 📁test_mcd
+    └── 📁deepcell # outputs for deepcell segmentation and masks per ROI
+        └── 📁intensities
+            └── .snakemake_timestamp
+            └── test_018.csv
+        └── 📁neighbors
+            └── .snakemake_timestamp
+            └── test_018.csv
+        └── 📁nuclei
+            └── .snakemake_timestamp
+            └── test_018.tiff
+        └── 📁regionprops
+            └── .snakemake_timestamp
+            └── test_018.csv
+        └── 📁whole_cell
+            └── .snakemake_timestamp
+            └── test_018.tiff
+    └── 📁export # Exports per channel tiff for each ROI, an ome.tiff file and a anndata object
+        └── .snakemake_timestamp
+        └── 📁test_018
+            └── ArAr80_80ArAr.tiff
+            └── Dy162_162Dy_h5454_Chr10SAT.tiff
+            └── Er166_166Er_h3838_Chr1SAT.tiff
+            └── Er167_167Er_h3838_Chr1SAT.tiff
+            └── Gd158_158Gd_h5050_Chr2SAT.tiff
+            └── Ir191_191Ir_DNA1.tiff
+            └── Ir193_193Ir_DNA2.tiff
+            └── Pb206_206Pb.tiff
+            └── Pb208_208Pb.tiff
+            └── Xe126_126Xe.tiff
+            └── Xe131_131Xe.tiff
+            └── Xe134_134Xe.tiff
+            └── test_018_mask.tiff
+        └── test_018.ome.tiff
+        └── test_mcd.h5ad
+    └── 📁img # Multichannel Tiff folder
+        └── .snakemake_timestamp
+        └── images.csv
+        └── test_018.tiff
+    └── 📁mcd
+        └── test.mcd
+    └── panel.csv # panel file containing all markers
+    └── panel_deepcell.csv # panel file containing markers for nuclear and cytoplasm segmentation
+    └── test_mcd.yaml
+```

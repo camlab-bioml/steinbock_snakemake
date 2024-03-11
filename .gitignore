@@ -14,3 +14,5 @@
 *.woff
 .config/
 .snakemake*
+.snakemake/metadata
+*/.snakemake_timestamp
