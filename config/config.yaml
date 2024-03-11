@@ -1,19 +1,18 @@
 projects:
-  - test_mcd_2
+  - test_mcd # Informs the snakemake pipeline which projects to process
 
 # Rule Group 1 : Options for preprocessing IMC Files
-# Hot pixel filter
 hpf: 5 # hot pixel filter
 
 # Rule Group 2 : Ilastik pixel classification options
-cropsize: 512
-seed: 123
-meanfactor: 100
-scale: 2
+# cropsize: 512
+# seed: 123
+# meanfactor: 100
+# scale: 2
 
 # Rule Group 3 : CellProfiler
-python_path: "/opt/cellprofiler-venv/bin/python"
-plugins_path: "/opt/cellprofiler_plugins"
+# python_path: "/opt/cellprofiler-venv/bin/python"
+# plugins_path: "/opt/cellprofiler_plugins"
 
 # Rule Group 4 : Deepcell
 cytoplasm: "Gd160 Ho165"
