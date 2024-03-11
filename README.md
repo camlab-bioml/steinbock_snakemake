@@ -64,7 +64,7 @@ projects:
 hpf: 5 # hot pixel filter
 
 # Rule Group 4 : Deepcell
-cytoplasm: "Gd160 Ho165"
+cytoplasm: "Gd158"
 deepcell_app: "mesmer"
 deepcell_model: "MultiplexSegmentation"
 deepcell_modelpath: "/opt/keras/models"
