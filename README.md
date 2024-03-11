@@ -23,6 +23,7 @@ After successful creation of the environment, we will then generate a singularit
 ```
 cd workflow/env
 singularity pull steinbock-cpu.sif docker://ghcr.io/bodenmillergroup/steinbock:0.16.1
+cd ../..
 ```
 
 ### Cloning GPU-based container (Not Recommended)
@@ -30,6 +31,7 @@ This will clone the GPU container for steinbock. Note, you will require `nvidia-
 ```
 cd workflow/env
 singularity pull steinbock-gpu.sif docker://ghcr.io/bodenmillergroup/steinbock:0.16.1-gpu
+cd ../..
 ```
 
 ## Running Steinbock-snakemake

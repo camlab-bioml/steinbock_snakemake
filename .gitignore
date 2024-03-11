@@ -12,4 +12,5 @@
 *.js
 *.css
 *.woff
+.config/
 .snakemake*
