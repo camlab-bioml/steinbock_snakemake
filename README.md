@@ -117,11 +117,8 @@ After completing the preflight configuration, we can run the pipeline. The `snak
 3. Specify bind mount for singularity container using the `--singularity-args` flag. This is required for the container to identify the directory path and for snakemake to see the output files. 
 
 ```
-cd ~/steinbock-snakemake/ # path to where steinbock-snakemake is cloned
+cd /home/tiakju/test_folder/steinbock_snakemake # path to where steinbock-snakemake is cloned
 
-snakemake -c 4 \
-          --use-singularity \
-          --singularity-args "-B ~/steinbock_snakemake" \
-          --configfile data/test_mcd/test_mcd.yaml \
+snakemake -c 4 --use-singularity --singularity-args "-B /home/tiakju/test_folder/steinbock_snakemake" --configfile data/test_mcd/test_mcd.yaml
 ```
 

@@ -1,7 +1,7 @@
 projects:
   - test_mcd # Informs the snakemake pipeline which projects to process
 
-container: "workflow/envs/steinbock-cpu.sif"
+container: "workflow/env/steinbock-cpu.sif"
 
 # Rule Group 1 : Options for preprocessing IMC Files
 hpf: 5 # hot pixel filter
