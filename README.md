@@ -105,7 +105,7 @@ kmax: 5 # Max number of neighbors
 ```
 
 ### Project specific configuration
-After editing `config.yml`, we would want to ensure we use the settings for each project. A simple solution is to copy the `config.yml` file over to the project directory before calling the snakemake pipeline. 
+After editing `config.yml`, we would want to ensure we use the sames settings for each project. A simple solution is to copy the `config.yml` file over to the project directory before calling the snakemake, and directing it to the config file. 
 ```
 cp config/config.yaml data/test_mcd/test_mcd.yaml
 ```
