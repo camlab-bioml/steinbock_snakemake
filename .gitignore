@@ -10,5 +10,7 @@
 *.h5ad
 *.csv
 *.log
-
+*.js
+*.css
+*.woff
 .snakemake*
