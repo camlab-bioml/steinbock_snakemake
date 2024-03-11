@@ -1,4 +1,4 @@
-name: snakemake
+name: steinbock-snakemake
 channels:
   - conda-forge
   - bioconda
