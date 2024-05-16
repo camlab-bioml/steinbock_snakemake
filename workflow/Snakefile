@@ -6,14 +6,6 @@ projects = config['projects']
 include: "rules/01_create_panel.smk"
 include: "rules/01_generate_tiff.smk"
 
-# Rule Group 2: Ilastik semantic classification
-# include: "rules/02_ilastik_prepare.smk"
-# include: "rules/02_ilastik_run.smk"
-
-# Rule Group 3: CellProfiler
-# include: "rules/03_cellprofiler_prepare.smk"
-# include: "rules/03_cellprofiler_run.smk"
-
 # Rule Group 4: DeepCell
 include: "rules/04_deepcell_prepare.smk"
 include: "rules/04_deepcell_wholecell.smk"
@@ -34,26 +26,16 @@ rule all:
         expand("data/{projects}/img", projects = projects),
         expand("data/{projects}/img/images.csv", projects = projects),
 
-        # Rule Group 2 : Ilastik Pixel Classifier
-        # expand("data/{projects}/ilastik/ilastik_img", projects = projects),
-        # expand("data/{projects}/ilastik/ilastik_crop", projects = projects),
-        # expand("data/{projects}/ilastik/pixel_classifier.ilp", projects = projects),
-        # expand("data/{projects}/ilastik/ilastik_probabilities", projects = projects), # This will require a pre-trained ilastik file. 
-
-        # Rule Group 3 : CellProfiler 
-        # expand("data/{projects}/cellprofiler/cell_segmentation.cppipe", projects = projects),
-        # expand("data/{projects}/cellprofiler/masks", projects = projects), # This will require a trained cellprofiler file. 
-
-        # Rule Group 4 : Mesmer Cell & Nuclei Segmentation
+        # Rule Group 2 : Mesmer Cell & Nuclei Segmentation
         expand("data/{projects}/panel_deepcell.csv", projects = projects),
         expand("data/{projects}/deepcell/whole_cell", projects = projects),
         expand("data/{projects}/deepcell/nuclei", projects = projects),
 
-        # Rule Group 5 : Extract segmentation features
+        # Rule Group 3 : Extract segmentation features
         expand("data/{projects}/deepcell/intensities", projects = projects),
         expand("data/{projects}/deepcell/regionprops", projects = projects),
         expand("data/{projects}/deepcell/neighbors", projects = projects),
 
-        # Rule Group 6 : Export Annadata
-        expand("data/{projects}/export", projects = projects),
-        expand("data/{projects}/export/{projects}.h5ad", projects = projects)
+        # Rule Group 4 : Export Annadata
+        expand("data/{projects}/export/ome", projects = projects),
+        expand("data/{projects}/export/{projects}.zarr", projects = projects)
