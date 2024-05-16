@@ -11,7 +11,9 @@
 *.js
 *.css
 *.woff
+*.z*
 .config/
-.snakemake*
-.snakemake/metadata
+.snakemake/
+.snakemake/metadata/Z*
+.snakemake_timestamp
 */.snakemake_timestamp

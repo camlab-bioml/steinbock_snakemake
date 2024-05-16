@@ -10,8 +10,8 @@ rule export_all:
     params:
         aggr = config["aggr"]
     output:
-        dir = directory("data/{projects}/export"),
-        anndata = "data/{projects}/export/{projects}.h5ad"
+        dir = directory("data/{projects}/export/ome"),
+        anndata = directory("data/{projects}/export/{projects}.zarr")
     singularity:
         config["container"]
     threads: 24
@@ -19,5 +19,5 @@ rule export_all:
         """
         steinbock export ome --img {input.img} --panel {input.panel} -o {output.dir}
         steinbock export histocat --img {input.img} --masks {input.masks} --panel {input.panel} -o {output.dir}
-        steinbock export anndata --intensities {input.intensities} --data {input.regionprops} --neighbors {input.neighbors} --panel {input.panel} --info {input.imginfo} --format h5ad -o {output.anndata}
+        steinbock export anndata --intensities {input.intensities} --data {input.regionprops} --neighbors {input.neighbors} --panel {input.panel} --info {input.imginfo} --format zarr -o {output.anndata}
         """

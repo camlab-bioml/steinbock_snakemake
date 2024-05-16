@@ -37,5 +37,5 @@ rule all:
         expand("data/{projects}/deepcell/neighbors", projects = projects),
 
         # Rule Group 4 : Export Annadata
-        expand("data/{projects}/export", projects = projects),
-        expand("data/{projects}/export/{projects}.h5ad", projects = projects)
+        expand("data/{projects}/export/ome", projects = projects),
+        expand("data/{projects}/export/{projects}.zarr", projects = projects)
