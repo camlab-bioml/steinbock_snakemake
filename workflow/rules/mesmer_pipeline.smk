@@ -1,16 +1,16 @@
 mesmer_pipeline_outputs = {
-    panel: expand("data/{projects}/panel.csv", projects = projects),
-    tiff_folder: directory(expand("data/{projects}/img", projects = projects)),
-    tiff_metadata: expand("data/{projects}/img/images.csv", projects = projects),
-    panel_deepcell: expand("data/{projects}/panel_deepcell.csv", projects = projects),
-    deepcell_nuclei: directory(expand("data/{projects}/deepcell/nuclei"), projects = projects),
-    deepcell_wholecell: directory(expand("data/{projects}/deepcell/whole_cell", projects = projects)),
-    extract_intensities: directory(expand("data/{projects}/deepcell/intensities", projects = projects)),
-    extract_neighbors: directory(expand("data/{projects}/deepcell/neighbors", projects = projects)),
-    extract_regionprops: directory(expand("data/{projects}/deepcell/regionprops", projects = projects)),
-    export_all_zarr: directory(expand("data/{projects}/export/{projects}.zarr"), projects = projects),
-    export_all_h5ad: expand("data/{projects}/export/{projects}.h5ad", projects = projects),
-    export_all_ome: directory(expand("data/{projects}/export/ome"), projects = projects)
+    "panel": expand("data/{projects}/panel.csv", projects = projects),
+    "tiff_folder": expand("data/{projects}/img", projects = projects),
+    "tiff_metadata": expand("data/{projects}/img/images.csv", projects = projects),
+    "panel_deepcell": expand("data/{projects}/panel_deepcell.csv", projects = projects),
+    "deepcell_nuclei": expand("data/{projects}/deepcell/nuclei", projects = projects),
+    "deepcell_wholecell": expand("data/{projects}/deepcell/whole_cell", projects = projects),
+    "extract_intensities": expand("data/{projects}/deepcell/intensities", projects = projects),
+    "extract_neighbors": expand("data/{projects}/deepcell/neighbors", projects = projects),
+    "extract_regionprops": expand("data/{projects}/deepcell/regionprops", projects = projects),
+    "export_all_zarr": expand("data/{projects}/export/{projects}.zarr", projects = projects),
+    "export_all_h5ad": expand("data/{projects}/export/{projects}.h5ad", projects = projects),
+    "export_all_ome": expand("data/{projects}/export/ome", projects = projects)
 }
 
 rule create_panel:
@@ -18,8 +18,6 @@ rule create_panel:
         "data/{projects}/mcd"
     output:
         "data/{projects}/panel.csv"
-    singularity:
-        config["container"]
     shell:
         """
         steinbock preprocess imc panel \
@@ -37,8 +35,6 @@ rule generate_tiff:
     output:
         place = directory("data/{projects}/img"),
         stats = "data/{projects}/img/images.csv"
-    singularity:
-        config["container"]
     shell:
         """
         steinbock preprocess imc images --mcd {input.b} \
@@ -58,14 +54,12 @@ rule deepcell_prepare:
     params:
         script = "workflow/scripts/deepcell_prepare.py",
         cytoplasm = config["cytoplasm"],
-        nuclei = config["nuclear"]
-    singularity:
-        config["container"]
+        nuclear = config["nuclear"]
     shell:
         """
         python {params.script} \
                 --workdir data/{projects}/ \
-                --nuclear {params.cytoplasm} \
+                --nuclear {params.nuclear} \
                 --cytoplasm {params.cytoplasm} \
                 --output panel_deepcell.csv
         """
@@ -81,8 +75,6 @@ rule deepcell_nuclei:
         px_size = config["deepcell_pxsize"]
     output:
         directory("data/{projects}/deepcell/nuclei")
-    singularity:
-        config["container"]
     threads: 24
     shell:
         """
@@ -111,8 +103,6 @@ rule deepcell_wholecell:
         px_size = config["deepcell_pxsize"],
     output:
         directory("data/{projects}/deepcell/whole_cell")
-    singularity:
-        config["container"]
     threads: 24
     shell:
         """
@@ -139,8 +129,6 @@ rule extract_intensities:
         aggr = config["aggr"]
     output:
         directory("data/{projects}/deepcell/intensities")
-    singularity:
-        config["container"]
     threads: 24
     shell:
         """
@@ -162,8 +150,6 @@ rule extract_neighbors:
         kmax = config["kmax"]
     output:
         directory("data/{projects}/deepcell/neighbors")
-    singularity:
-        config["container"]
     threads: 24
     shell:
         """
@@ -184,8 +170,6 @@ rule extract_regionprops:
         aggr = config["aggr"]
     output:
         directory("data/{projects}/deepcell/regionprops")
-    singularity:
-        config["container"]
     threads: 24
     shell:
         """
@@ -211,8 +195,6 @@ rule export_all:
         dir = directory("data/{projects}/export/ome"),
         h5ad = "data/{projects}/export/{projects}.h5ad",
         zarr = directory("data/{projects}/export/{projects}.zarr")
-    singularity:
-        config["container"]
     threads: 24
     shell:
         """

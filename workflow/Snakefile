@@ -1,7 +1,7 @@
 projects = config['projects']
 
 # Rule Mesmer Pipeline: Deepcell segmentation
-include: "rules/mesmer_pipline.smk"
+include: "rules/mesmer_pipeline.smk"
 
 rule all:
     input:
