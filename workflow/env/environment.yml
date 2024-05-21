@@ -277,4 +277,3 @@ dependencies:
       - xtiff==0.7.9
       - yte==1.5.4
       - zipp==3.18.1
-prefix: /home/tiakju/miniconda3/envs/steinbock-snakemake

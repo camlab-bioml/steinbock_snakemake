@@ -1,13 +1,13 @@
-# Steinbock-snakemake v0.0.1
+# Steinbock-snakemake v0.0.2
 
 ## Pipeline overview
 This steinbock pipeline uses mesmer to segment cells and nuclei, generate neighbors and finally outputs files required for downstream analysis. 
 
 ![DAG](dag.png)
 
-## Set-up pipeline environment (via conda, pipenv)
+## Set-up pipeline environment (via conda, pip)
 
-We will first set up the pipeline environment via conda. This will install all dependencies including snakemake and singularity for use.
+We will first set up the pipeline environment via conda and pip. This will install all dependencies including snakemake and singularity for use.
 
 ```
 git clone https://github.com/ttj131/steinbock_snakemake && cd steinbock_snakemake # clone git repo, then move into the pipeline folder. 
@@ -15,12 +15,7 @@ conda env create -y --file=workflow/env/environment.yml
 conda activate steinbock-snakemake
 ```
 
-Alternatively we can use pipenv to just install snakemake given support for singularity in a cluster environment. (Not recommended)
-```
-pipenv install -r workflow/env/requirements.txt 
-```
-
-## Clone docker containers
+## OPTIONAL: Cloning docker containers. From v0.0.2 onwards cloning of the steinbock docker containers will no longer be required. 
 
 ### Cloning CPU-based container (Recommended)
 After successful creation of the environment, we will then generate a singularity container for use with the snakemake pipeline. This container will require about ~4GB of storage, and will be located under workflow/envs
@@ -60,51 +55,44 @@ Each project is given a directory under the data folder. To create a new project
 ```
 
 ### Preflight configuration
-Before running the pipeline, we will first take a look at the configuration file `config/config.yaml`. This will store important information regarding the settings for each analysis module. Note that values for Rule Group 2 and Rule Group 3 are commented out, as we will not be using CellProfiler or Ilastik for this tutorial. The structure of the config file is as follows:
-
+Before running the pipeline, we will first take a look at the configuration file `config/config.yaml`. This will store important information regarding the settings for each analysis module. The structure of the config file is as follows:
 ```
 projects:
   - test_mcd # Informs the snakemake pipeline which projects to process
 
-# Rule Group 1 : Options for preprocessing IMC Files
+# Options for mesmer_pipeline
+seed: 123L
 hpf: 5 # hot pixel filter
-
-# Rule Group 4 : Deepcell
-cytoplasm: "Gd158"
+nuclear: "Ir191" # Nuclear Channel. For multiple channels the syntax is "Ir191 Ir193 Dy162"
+cytoplasm: "Gd158" # Cytoplasm Channel. For multiple channels the syntax is "Ir191 Ir193 Dy162"
 deepcell_app: "mesmer"
 deepcell_model: "MultiplexSegmentation"
 deepcell_modelpath: "/opt/keras/models"
 deepcell_pxsize: 1
-
-# Rule Group 5 :
-aggr: "median"
-neighbor_type: "borders"
-dmax: 15
-kmax: 5
+aggr: "mean" # Aggregation of signal. Can be either of these [mean|median]
+neighbor_type: "borders" # Consideration of each neighbor
+dmax: 15 # Max centroid to centroid distance 
+kmax: 5 # Max number of neighbors
 ```
 
-Under the `projects` configuration, add your folder name and the pipeline will process the mcd files in that folder, if it had not already done so. We will use the `test_mcd` project in this demonstration. 
+Under the `projects` configuration, add your folder name and the pipeline will process the mcd files in that folder, if you had not already done so. We will use the `test_mcd` project in this demonstration. 
 ```
 projects:
     - test_mcd
-    # - myproject # <-- add the folder name to your project
 ```
 
 ### Channels for segmenting cells
-To help mesmer segment cells, steinbock will require the user to input the mass channels for cytoplasm specific markers (e.g panCK, Actin etc). You should include those channels under `cytoplasm` in Rule Group 4.
+To help mesmer segment cells, steinbock will require the user to input the mass channels for cytoplasm specific markers (e.g panCK, Actin etc). You should include those channels under `cytoplasm` and `nuclear`
 ```
-cytoplasm: "Gd158" # <-- add mass channels that corresspond to the cytoplasm
-deepcell_app: "mesmer"
-deepcell_model: "MultiplexSegmentation"
-deepcell_modelpath: "/opt/keras/models"
-deepcell_pxsize: 1 # <-- pixel sizes for deepcell, default 1 um for IMC images. 
+nuclear: "Ir191" # Nuclear Channel. For multiple channels the syntax is "Ir191 Ir193 Dy162"
+cytoplasm: "Gd158" # Cytoplasm Channel. For multiple channels the syntax is "Ir191 Ir193 Dy162" 
 ```
 
 ### Extracting features
-After generating segmenting masks, steinbock will proceeed to extract single-cell features (intensities, neighbors, region properties etc.) The following options are avaialble under Rule Group 5
+After generating segmenting masks, steinbock will proceeed to extract single-cell features (intensities, neighbors, region properties etc.)
 ```
-aggr: "median" # [sum|min|max|mean|median|std|var] are available options. We will be using the median intensity per cell. 
-neighbor_type: "borders" # [centroids|borders|expansion] # Method for determining neighbors. By default determines thresholding on Euclidean distances between object borders.
+aggr: "mean" # Aggregation of signal. Can be either of these [mean|median]
+neighbor_type: "borders" # Consideration of each neighbor
 dmax: 15 # Max distance
 kmax: 5 # Max number of neighbors
 ```
@@ -119,12 +107,10 @@ cp config/config.yaml data/test_mcd/test_mcd.yaml
 After completing the preflight configuration, we can run the pipeline. The `snakemake` command is invoked in the `steinbock-snakemake` directory:
 1. Specify cores required using the `-c` flag.
 2. Specify the configuration file used using the `--configfile` flag.
-3. Specify bind mount for singularity container using the `--singularity-args` flag. This is required for the container to identify the directory path and for snakemake to see the output files. 
 
 ```
-cd /home/tiakju/test_folder/steinbock_snakemake # path to where steinbock-snakemake is cloned
-
-snakemake -c 4 --use-singularity --singularity-args "-B /home/tiakju/mnt/crucial/SynologyDrive/pdac_projects/steinbock_snakemake" --configfile data/test_mcd/test_mcd.yaml
+cd /home/tiakju/test_folder/steinbock_snakemake # navigate to the main directory where it is cloned
+snakemake -c 4 --configfile data/test_mcd/test_mcd.yaml
 ```
 
 ### Inspect pipeline outputs

@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.0.2]
+
+### Added
+
+- Simplified Snakemake rule structure
+- Zarr store as well as h5ad outputs
+
+### Changed
+
+ - From container based workflow to conda and pip based workflow. To deal with docker container issues.
+
+### Removed
+
+ - Requirement of containers
+
+
 ## [v0.0.1]
 
 ### Added
