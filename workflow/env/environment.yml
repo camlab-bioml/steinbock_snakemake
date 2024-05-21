@@ -38,6 +38,7 @@ dependencies:
       - argon2-cffi-bindings==21.2.0
       - array-api-compat==1.6
       - arrow==1.3.0
+      - asciitree==0.3.3
       - asttokens==2.4.1
       - astunparse==1.6.3
       - async-lru==2.0.4
@@ -73,6 +74,7 @@ dependencies:
       - dpath==2.1.6
       - exceptiongroup==1.2.1
       - executing==2.0.1
+      - fasteners==0.19
       - fastjsonschema==2.19.1
       - fcswrite==0.6.2
       - flatbuffers==24.3.25
@@ -155,6 +157,7 @@ dependencies:
       - notebook-shim==0.2.4
       - npe2==0.7.5
       - numba==0.59.1
+      - numcodecs==0.12.1
       - numpy==1.23.5
       - numpydoc==1.7.0
       - oauthlib==3.2.2
@@ -276,5 +279,6 @@ dependencies:
       - wrapt==1.16.0
       - xtiff==0.7.9
       - yte==1.5.4
+      - zarr==2.18.1
       - zipp==3.18.1
 prefix: /home/tiakju/miniconda3/envs/steinbock-snakemake
