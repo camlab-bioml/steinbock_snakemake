@@ -10,7 +10,7 @@ This steinbock pipeline uses mesmer to segment cells and nuclei, generate neighb
 We will first set up the pipeline environment via conda and pip. This will install all dependencies including snakemake and singularity for use.
 
 ```
-git clone https://github.com/ttj131/steinbock_snakemake && cd steinbock_snakemake # clone git repo, then move into the pipeline folder. 
+git clone https://github.com/camblab-bioml/steinbock_snakemake && cd steinbock_snakemake # clone git repo, then move into the pipeline folder. 
 conda env create -y --file=workflow/env/environment.yml
 conda activate steinbock-snakemake
 ```
