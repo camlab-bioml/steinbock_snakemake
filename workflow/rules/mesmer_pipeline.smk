@@ -1,6 +1,7 @@
 mesmer_pipeline_outputs = {
     "panel": expand("data/{projects}/panel.csv", projects = projects),
     "tiff_folder": expand("data/{projects}/img", projects = projects),
+    "archsinh_folder": expand("data/{projects}/img_arcsinh", projects = projects),
     "tiff_metadata": expand("data/{projects}/img/images.csv", projects = projects),
     "panel_deepcell": expand("data/{projects}/panel_deepcell.csv", projects = projects),
     "deepcell_nuclei": expand("data/{projects}/deepcell/nuclei", projects = projects),
@@ -46,6 +47,15 @@ rule generate_tiff:
                                         --verbosity DEBUG
         """
 
+rule arcsinh:
+    input:
+        rules.generate_tiff.output.place
+    output:
+        normalized = directory("data/{projects}/img_arcsinh")
+    script:
+        "mesmer_pipeline/arcsinh_normalization.py"
+
+
 rule deepcell_prepare:
     input:
         "data/{projects}/panel.csv"
@@ -66,7 +76,7 @@ rule deepcell_prepare:
 
 rule deepcell_nuclei:
     input:
-        img = rules.generate_tiff.output.place,
+        img = rules.arcsinh.output.normalized,
         panel = rules.deepcell_prepare.output
     params:
         app = config["deepcell_app"],
@@ -85,7 +95,6 @@ rule deepcell_nuclei:
             --type nuclear \
             --img {input.img} \
             --minmax \
-            --zscore \
             --panel {input.panel} \
             --pixelsize {params.px_size} \
             -o {output} \
@@ -94,7 +103,7 @@ rule deepcell_nuclei:
 
 rule deepcell_wholecell:
     input:
-        img = rules.generate_tiff.output.place,
+        img = rules.arcsinh.output.normalized,
         panel = rules.deepcell_prepare.output
     params:
         app = config["deepcell_app"],
@@ -113,7 +122,6 @@ rule deepcell_wholecell:
             --type whole-cell \
             --img {input.img} \
             --minmax \
-            --zscore \
             --panel {input.panel} \
             --pixelsize {params.px_size} \
             -o {output} \
@@ -123,7 +131,7 @@ rule deepcell_wholecell:
 rule extract_intensities:
     input:
         masks = rules.deepcell_wholecell.output,
-        img = rules.generate_tiff.output.place,
+        img = rules.arcsinh.output.normalized,
         panel = rules.create_panel.output
     params:
         aggr = config["aggr"]
@@ -165,7 +173,7 @@ rule extract_neighbors:
 rule extract_regionprops:
     input:
         masks = rules.deepcell_wholecell.output,
-        img = rules.generate_tiff.output.place
+        img = rules.arcsinh.output.normalized
     params:
         aggr = config["aggr"]
     output:
@@ -183,7 +191,7 @@ rule extract_regionprops:
 rule export_all:
     input:
         masks = rules.deepcell_wholecell.output,
-        img = rules.generate_tiff.output.place,
+        img = rules.arcsinh.output.normalized,
         imginfo = rules.generate_tiff.output.stats,
         panel = rules.create_panel.output,
         intensities = rules.extract_intensities.output,
