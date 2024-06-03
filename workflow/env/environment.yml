@@ -281,4 +281,3 @@ dependencies:
       - yte==1.5.4
       - zarr==2.18.1
       - zipp==3.18.1
-prefix: /home/tiakju/miniconda3/envs/steinbock-snakemake
