@@ -17,3 +17,4 @@
 .snakemake/metadata/Z*
 .snakemake_timestamp
 */.snakemake_timestamp
+data/*
