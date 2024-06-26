@@ -160,7 +160,7 @@ dependencies:
       - notebook-shim==0.2.4
       - npe2==0.7.5
       - numcodecs==0.12.1
-      - numpy==1.26.4
+      - numpy==1.23.0
       - numpydoc==1.7.0
       - oauthlib==3.2.2
       - opencv-python-headless==4.10.0.82
