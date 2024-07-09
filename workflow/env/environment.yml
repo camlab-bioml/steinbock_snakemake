@@ -231,6 +231,7 @@ dependencies:
       - npe2==0.7.5
       - numba==0.59.1
       - numcodecs==0.12.1
+      - numpy==1.23.0
       - numpydoc==1.7.0
       - opencv-python-headless==4.10.0.82
       - overrides==7.7.0
