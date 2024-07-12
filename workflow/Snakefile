@@ -1,8 +1,17 @@
-projects = config['projects']
+projects = "data_analysis_training"
 
 # Rule Mesmer Pipeline: Deepcell segmentation
-include: "rules/mesmer_pipeline.smk"
+include: "rules/preprocessing.smk"
+include: "rules/normalization.smk"
+include: "rules/segmentation.smk"
+include: "rules/quantification.smk"
+include: "rules/export.smk"
 
 rule all:
     input:
-        mesmer_pipeline_outputs.values()
+        preprocessing_output.values(),
+        normalization_output.values(),
+        deepcell.values(),
+        quantification.values(),
+        export.values()
+      # denoised_output.values()
