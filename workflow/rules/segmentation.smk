@@ -18,7 +18,7 @@ rule deepcell_prepare:
     shell:
         """
         python {params.script} \
-                --panel {input}
+                --panel {input} \
                 --nuclear {params.nuclear} \
                 --cytoplasm {params.cytoplasm} \
                 --output {output}
