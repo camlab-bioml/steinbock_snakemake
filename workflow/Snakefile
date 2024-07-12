@@ -1,4 +1,4 @@
-projects = "data_analysis_training"
+projects = config['projects']
 
 # Rule Mesmer Pipeline: Deepcell segmentation
 include: "rules/preprocessing.smk"
