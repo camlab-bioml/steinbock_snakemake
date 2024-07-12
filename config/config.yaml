@@ -2,10 +2,16 @@ projects:
   - test_mcd # Informs the snakemake pipeline which projects to process
 
 # Options for mesmer_pipeline
+# Options for mesmer_pipeline
 seed: 123L
-hpf: 5 # hot pixel filter
-nuclear: "Ir191" # Nuclear Channel. For multiple channels the syntax is "Ir191 Ir193 Dy162"
-cytoplasm: "Gd158" # Cytoplasm Channel. For multiple channels the syntax is "Ir191 Ir193 Dy162"
+hpf: 0 # hot pixel filter
+
+nuclear: # Nuclear Channel. For multiple channels the syntax is "Ir191 Ir193 Dy162"
+  - ""
+cytoplasm: # Cytoplasm Channel. For multiple channels the syntax is "Ir191 Ir193 Dy162"
+  - ""
+  - ""
+
 deepcell_app: "mesmer"
 deepcell_model: "MultiplexSegmentation"
 deepcell_modelpath: "/opt/keras/models"
