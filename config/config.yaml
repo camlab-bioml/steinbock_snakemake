@@ -1,8 +1,9 @@
+####################################
+# Configuration files for sequanix #
+####################################
 projects:
-  - test_mcd # Informs the snakemake pipeline which projects to process
+  - training# Informs the snakemake pipeline which projects to process
 
-# Options for mesmer_pipeline
-# Options for mesmer_pipeline
 seed: 123L
 hpf: 0 # hot pixel filter
 

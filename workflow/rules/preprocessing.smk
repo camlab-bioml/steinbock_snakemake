@@ -1,4 +1,3 @@
-
 preprocessing_output = {
     "panel": expand("data/{projects}/panel.csv", projects = projects),
     "tiff_folder": expand("data/{projects}/img/raw", projects = projects),
@@ -7,14 +6,14 @@ preprocessing_output = {
 
 rule create_panel:
     input:
-        "data/{projects}/mcd"
+        a = "data/{projects}/mcd"
     output:
-        panel = "data/{projects}/panel.csv"
+        "data/{projects}/panel.csv"
     conda: "steinbock-snakemake"
     shell:
         """
         steinbock preprocess imc panel \
-            --mcd {input} \
+            --mcd {input.a} \
             -o {output} \
             --verbosity INFO
         """

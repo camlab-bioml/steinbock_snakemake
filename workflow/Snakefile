@@ -14,4 +14,3 @@ rule all:
         deepcell.values(),
         quantification.values(),
         export.values()
-      # denoised_output.values()

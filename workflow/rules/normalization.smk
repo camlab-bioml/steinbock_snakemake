@@ -1,43 +1,51 @@
-projects, ROI = glob_wildcards(rules.generate_tiff.output.place + "/" + "{ROI}" + ".tiff")
-
 normalization_output = {
-    "tiffs_arcsinh": expand("data/{projects}/img/arcsinh/{ROI}.tiff", projects = projects, ROI = ROI),
-    "tiffs_zscale": expand("data/{projects}/img/zscale/{ROI}.tiff", projects = projects, ROI = ROI),
-    "plots": expand("data/{projects}/img/plots/{ROI}", projects = projects, ROI = ROI)
+     "arcsinh": expand("data/{projects}/img/arcsinh/", projects = projects),
+     "minmax": expand("data/{projects}/img/minmax/", projects = projects),
+     "zscale": expand("data/{projects}/img/zscale/", projects = projects),
+   #  "preview": expand("data/{projects}/img/preview", projects = projects)
 }
 
-rule arcsinh_normalization:
+rule arcsinh:
     input:
-        raw = "data/{projects}/img/raw/{ROI}.tiff"
+        raw_folder = rules.generate_tiff.output.place
     output:
-        normalized = "data/{projects}/img/arcsinh/{ROI}.tiff"
+        arcsinh_folder = directory("data/{projects}/img/arcsinh/")
     threads: 1
     conda: "steinbock-snakemake"
     script:
         "normalization/arcsinh_normalization.py"
 
-rule zscale_normalization:
+rule minmax:
     input:
-        raw = "data/{projects}/img/raw/{ROI}.tiff"
+        raw_folder = rules.generate_tiff.output.place
     output:
-        normalized = "data/{projects}/img/zscale/{ROI}.tiff"
-    params:
-        alpha = 1,
-        beta = 0,
+        minmax_folder = directory("data/{projects}/img/minmax/")
+    threads: 1
+    conda: "steinbock-snakemake"
+    script:
+        "normalization/minmax_normalization.py"
+
+rule zscale:
+    input:
+        raw_folder = rules.generate_tiff.output.place
+    output:
+        zscale_folder = directory("data/{projects}/img/zscale/")
     threads: 1
     conda: "steinbock-snakemake"
     script:
         "normalization/zscale_normalization.py"
 
-rule plot_normalization:
-    input:
-        raw = "data/{projects}/img/raw/{ROI}.tiff",
-        arcsinh = rules.arcsinh_normalization.output.normalized,
-        zscale = rules.zscale_normalization.output.normalized,
-        panel = rules.create_panel.output.panel
-    output:
-        plots = directory("data/{projects}/img/plots/{ROI}")
-    threads: 1
-    conda: "steinbock-snakemake"
-    script:
-        "normalization/plot_normalization.py"
+# rule preview:
+#     input:
+#         raw = rules.generate_tiff.output.place,
+#         arcsinh = rules.arcsinh.output.arcsinh_folder,
+#         zscale = rules.zscale.output.zscale_folder,
+#         minmax = rules.minmax.output.minmax_folder, 
+#         panel = rules.create_panel.output,
+#         images = rules.generate_tiff.output.stats
+#     output:
+#         directory("data/{projects}/img/preview")
+#     threads: 1
+#     conda: "steinbock-snakemake"
+#     script:
+#         "normalization/preview.py"

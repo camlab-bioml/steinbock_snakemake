@@ -7,7 +7,7 @@ deepcell = {
 
 rule deepcell_prepare:
     input:
-        rules.create_panel.output.panel
+        rules.create_panel.output
     output:
         "data/{projects}/panel_deepcell.csv"
     params:
