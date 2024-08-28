@@ -1,7 +1,8 @@
 export = {
     "export_all_zarr": expand("data/{projects}/export/{projects}.zarr", projects = projects),
     "export_all_h5ad": expand("data/{projects}/export/{projects}.h5ad", projects = projects),
-    "export_all_ome": expand("data/{projects}/export/ome", projects = projects)
+    "export_all_ome": expand("data/{projects}/export/ome", projects = projects),
+    "export_all_umap": expand("data/{projects}/export/umap_coordinates.csv", projects = projects)
 }
 
 
@@ -18,7 +19,7 @@ rule export_all:
         aggr = config["aggr"]
     output:
         dir = directory("data/{projects}/export/ome"),
-        h5ad = "data/{projects}/export/{projects}.h5ad",
+        h5ad = "data/{projects}/export/{projects}_export.h5ad",
         zarr = directory("data/{projects}/export/{projects}.zarr")
     threads: 24
     shell:
@@ -27,4 +28,31 @@ rule export_all:
         steinbock export histocat --img {input.img} --masks {input.masks} --panel {input.panel} -o {output.dir}
         steinbock export anndata --intensities {input.intensities} --data {input.regionprops} --neighbors {input.neighbors} --panel {input.panel} --info {input.imginfo} --format zarr -o {output.zarr}
         steinbock export anndata --intensities {input.intensities} --data {input.regionprops} --neighbors {input.neighbors} --panel {input.panel} --info {input.imginfo} --format h5ad -o {output.h5ad}
+        """
+
+rule phenograph:
+    input:
+        h5ad = rules.export_all.output.h5ad
+    params:
+        script = srcdir("phenograph/phenograph_clustering.py"),
+        k = config["phenograph_k"],
+        min_cluster_size = config["phenograph_min_cluster_size"]
+    output:
+        h5ad = "data/{projects}/export/{projects}.h5ad"
+    shell:
+        """
+        mv {input.h5ad} {output.h5ad} && python {params.script} --input {output.h5ad} --output {output.h5ad} -k {params.k} -m {params.min_cluster_size} --normalize
+        """
+
+rule umap:
+    input:
+        h5ad = rules.phenograph.output.h5ad
+    params:
+        script = srcdir("phenograph/dimension_reduction.py")
+    conda: "steinbock-snakemake"
+    output:
+        coords = "data/{projects}/export/umap_coordinates.csv"
+    shell:
+        """
+        python {params.script} --input {input.h5ad} --output {output.coords} --normalize
         """
