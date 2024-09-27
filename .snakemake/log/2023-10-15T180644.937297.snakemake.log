@@ -1,8 +1,0 @@
-The flag 'directory' used in rule all is only valid for outputs, not inputs.
-Building DAG of jobs...
-MissingInputException in rule preprocess_panel in file /home/tiakju/SynologyDrive/JacksonLab/pdac_projects/steinbock_snakemake/workflow/rules/preprocess_panel.smk, line 1:
-Missing input files for rule preprocess_panel:
-    output: raw/BXPC3_SAT_TEST/panel.csv
-    wildcards: mcd_folders=BXPC3_SAT_TEST
-    affected files:
-        raw/BXPC3_SAT_TEST/mcd
