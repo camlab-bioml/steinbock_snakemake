@@ -1,0 +1,41 @@
+name: run steinbock with snakemake tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: steinbock-snakemake test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    env:
+      CONDA_OVERRIDE_CUDA: "11.8"
+    strategy:
+      matrix:
+        os: ["ubuntu-latest"]
+        python-version: ["3.10"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - if: runner.os == 'Linux'
+        run: sudo apt-get -y update && sudo apt-get install -y libgl1-mesa-dev libglfw3-dev
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniconda-version: "latest"
+          environment-file: workflow/env/environment.yml
+          activate-environment: steinbock-snakemake
+          channels: conda-forge,bioconda,defaults
+          CONDA_OVERRIDE_CUDA: "11.8"
+      - name: run tests
+        shell: bash -l {0}
+        run: snakemake --cores all --configfile data/test_mcd/config.yaml 
+      - name: Install and run pytest
+        run: |
+          pip install pytest pillow anndata numpy
+          pytest tests/
