@@ -1,4 +1,4 @@
-name: run steinbock with snakemake tests
+name: run steinbock with snakemake integration testing
 
 on:
   push:
@@ -32,10 +32,14 @@ jobs:
           activate-environment: steinbock-snakemake
           channels: conda-forge,bioconda,defaults
           CONDA_OVERRIDE_CUDA: "11.8"
-      - name: run tests
+      - name: Set up integration test data directory
+        shell: bash -l {0}
+        run: mkdir data && cp -r tests/test_mcd data/
+      - name: Run pipeline
         shell: bash -l {0}
         run: snakemake --cores all --configfile data/test_mcd/config.yaml 
       - name: Install and run pytest
+        shell: bash -l {0}
         run: |
-          pip install pytest pillow anndata numpy
+          pip install pytest pillow anndata numpy tifffile pandas
           pytest tests/

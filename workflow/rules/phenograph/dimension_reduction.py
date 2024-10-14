@@ -3,6 +3,7 @@ import argparse
 import umap
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
+import numpy as np
 # Parser object
 parser = argparse.ArgumentParser(prog='UMAP',
                                  description='Generate UMAP coordinates for objects from an intensity h5ad.')
@@ -28,6 +29,10 @@ except (AttributeError, ImportError):
     umap_obj = umap.UMAP()
 scaled = StandardScaler().fit_transform(expr)
 embedding = pd.DataFrame(umap_obj.fit_transform(scaled), columns=["UMAP1", "UMAP2"])
+
+export.obsm['UMAP'] = np.array(embedding).astype(np.float32)
+
+export.write_h5ad(args.input)
 
 embedding.to_csv(args.output, index=False)
 
