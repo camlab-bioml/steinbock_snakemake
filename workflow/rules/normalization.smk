@@ -2,6 +2,7 @@ normalization_output = {
      "arcsinh": expand("data/{projects}/img/arcsinh/", projects = projects),
      "minmax": expand("data/{projects}/img/minmax/", projects = projects),
      "zscale": expand("data/{projects}/img/zscale/", projects = projects),
+     "scaling": expand("data/{projects}/export/scaling.json", projects = projects)
    #  "preview": expand("data/{projects}/img/preview", projects = projects)
 }
 
@@ -49,3 +50,19 @@ rule zscale:
 #     conda: "steinbock-snakemake"
 #     script:
 #         "normalization/preview.py"
+
+rule scaling:
+    input:
+        mcd = "data/{projects}/mcd"
+    output:
+        json = "data/{projects}/export/scaling.json"
+    threads: 1
+    params:
+        script = srcdir("normalization/scaling.py"),
+        mode = config["scaling_mode"] if "scaling_mode" in config else "mean",
+        size_lim = config["scaling_size_limit_px"] if "scaling_size_limit_px" in config else 100
+    conda: "steinbock-snakemake"
+    shell:
+        """
+        python {params.script} -i {input.mcd} -o {output.json} -m {params.mode} -v -s {params.size_lim}
+        """
