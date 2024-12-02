@@ -20,4 +20,6 @@
 data/*
 sandbox/
 .idea/
-__pycache__/
+__pycache__/*
+
+*.pyc
