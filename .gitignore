@@ -23,3 +23,5 @@ sandbox/
 __pycache__/*
 
 *.pyc
+
+sandbox/

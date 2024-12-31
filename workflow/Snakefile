@@ -1,4 +1,5 @@
 projects = config['projects']
+umap_dist = config['umap_min_dist'] if 'umap_min_dist' in config else [0, 0.1, 0.25, 0.5, 1]
 
 # Rule Mesmer Pipeline: Deepcell segmentation
 include: "rules/preprocessing.smk"

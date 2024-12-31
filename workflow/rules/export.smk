@@ -2,9 +2,10 @@ export = {
     "export_all_zarr": expand("data/{projects}/export/{projects}.zarr", projects = projects),
     "export_all_h5ad": expand("data/{projects}/export/{projects}.h5ad", projects = projects),
     "export_all_ome": expand("data/{projects}/export/ome", projects = projects),
-    "export_all_umap": expand("data/{projects}/export/umap_coordinates.csv", projects = projects)
-}
+    "export_all_umap": expand("data/{projects}/export/umap/umap_min_dist_{umap_dist}_coordinates.csv", projects = projects, umap_dist = umap_dist),
+    "export_umap_plots": expand("data/{projects}/export/umap/umap_min_dist_{umap_dist}.png", projects = projects, umap_dist = umap_dist),
 
+}
 
 rule export_all:
     input:
@@ -34,7 +35,7 @@ rule phenograph:
     input:
         h5ad = rules.export_all.output.h5ad
     params:
-        script = srcdir("phenograph/phenograph_clustering.py"),
+        script = srcdir("export/phenograph_clustering.py"),
         k = config["phenograph_k"],
         min_cluster_size = config["phenograph_min_cluster_size"]
     output:
@@ -48,11 +49,17 @@ rule umap:
     input:
         h5ad = rules.phenograph.output.h5ad
     params:
-        script = srcdir("phenograph/dimension_reduction.py")
+        script = srcdir("export/dimension_reduction.py"),
+        min_dist = lambda wildcards: wildcards.umap_dist
     conda: "steinbock-snakemake"
     output:
-        coords = "data/{projects}/export/umap_coordinates.csv"
+        coords = "data/{projects}/export/umap/umap_min_dist_{umap_dist}_coordinates.csv",
+        plots = "data/{projects}/export/umap/umap_min_dist_{umap_dist}.png"
     shell:
         """
-        python {params.script} --input {input.h5ad} --output {output.coords} --normalize
+        mkdir -p data/{projects}/export/umap/
+        cp {input.h5ad} data/{projects}/export/tmp_{params.min_dist}.h5ad
+        python {params.script} --input data/{projects}/export/tmp_{params.min_dist}.h5ad --output-coords {output.coords} \
+        --normalize --min-dist {params.min_dist} --plot --output-plot {output.plots}
+        rm data/{projects}/export/tmp_{params.min_dist}.h5ad
         """

@@ -10,9 +10,9 @@ parser = argparse.ArgumentParser(prog='Phenograph clustering',
 parser.add_argument("-i", "--input", dest="input", action="store", default="", help="Input h5ad file.")
 parser.add_argument("-o", "--output", dest="output", action="store", default="", help="Output h5ad file.")
 parser.add_argument("-k", "--nearest-neighbors", dest="k", action="store", type=int, default=30,
-                    help="K value nearest neighbors to use in phenograph. Default is 30")
+                    help="K value nearest neighbors to use in export. Default is 30")
 parser.add_argument("-m", "--min-cluster-size", dest="min_clust", action="store", type=int, default=10,
-                    help="Minimum cluster size to use in phenograph. Default is 10")
+                    help="Minimum cluster size to use in export. Default is 10")
 parser.add_argument("-n", "--normalize", dest="normalize", action="store_true",
                     help="Column normalize the expression intensities prior to clustering.")
 

@@ -1,4 +1,4 @@
-# Steinbock-snakemake v0.0.3
+# Steinbock-snakemake v0.0.4
 
 ## Pipeline overview
 This steinbock pipeline uses mesmer to segment cells and nuclei, generate neighbors and finally outputs files required for downstream analysis. 
@@ -77,6 +77,8 @@ kmax: 5 # Max number of neighbors
 
 phenograph_k: 30 # Number of kearest neighbors to use for phenograph
 phenograph_min_cluster_size: 10 # Minimum number of cells requires for a cluster to be designated as a true cluster
+
+umap_min_dist: [0, 0.1, 0.25, 0.5, 1] #run the UMAP for every distanbce value passed
 ```
 
 Under the `projects` configuration, add your folder name and the pipeline will process the mcd files in that folder, if you had not already done so. We will use the `test_mcd` project in this demonstration. 
@@ -117,8 +119,23 @@ The exported anndata object that follows the naming pattern `{project}.h5ad` wil
 outputs in the following anndata slots:
 
 - clustering will be found in the `phenograph` column of the `obs` slot
-- The UMAP coordinates are stored as a 2 column array in the `UMAP` key of the `obsm` slot. These
-coordinates are additionally output to the `umap_coordinates.csv` file that can be imported separately into rakaia
+
+### UMAP
+
+The pipeline will be default run UMAP with the following minimum distance values between 0 and 1:
+0, 0.1, 0.25, 0.5, 1. These values can be changed by passing a list of values in the config as 'umap_min_dist';
+
+```
+umap_min_dist: [0, 0.1, 0.25, 0.5, 1] #run the UMAP for every distanbce value passed
+```
+
+smaller UMAP distance values produce tighter more dispersed clusters, while larger values
+create fewer clusters and a more uniform manifold. 
+
+The UMAp coordinates for every distance used are stored in the `umap` sub-directory of the 
+`export` output directory. Each distance is also plotted alongside the phenograph clustering to
+give users a general idea of cluster dispersion for different distance metrics. 
+
 
 ### Project specific configuration
 After editing `config.yml`, we would want to ensure we use the same settings for each project. A simple solution is to copy the `config.yml` file over to the project directory before calling the snakemake, and directing it to the config file. 
@@ -170,7 +187,9 @@ This concludes this tutorial!
             └── test_018_mask.tiff
         └── test_018.ome.tiff
         └── test_mcd.h5ad
-        └── umap_coordinates.csv
+        └── 📁umap
+            └── umap_min_dist...coordinates.csv
+            └── umap_min_dist...png
     └── 📁img # Multichannel Tiff folder
         └── images.csv
         └── test_018.tiff

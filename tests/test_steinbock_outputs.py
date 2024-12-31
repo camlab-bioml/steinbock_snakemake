@@ -8,6 +8,7 @@ import pytest
 import glob
 import tifffile
 import json
+from pathlib import Path
 
 
 class SteinbockSnakemakeIntegrationTests(unittest.TestCase):
@@ -50,12 +51,17 @@ class SteinbockSnakemakeIntegrationTests(unittest.TestCase):
 
         assert 'phenograph' in export_anndata.obs
 
-        assert 'UMAP' in export_anndata.obsm
-        assert export_anndata.obsm['UMAP'].shape == (581, 2)
+        # assert 'UMAP' in export_anndata.obsm
+        # assert export_anndata.obsm['UMAP'].shape == (581, 2)
 
-        umap_coordinates = pd.read_csv(os.path.join(self.get_steinbock_out_dir, 'export',
-                                           'umap_coordinates.csv'))
-        assert umap_coordinates.shape == (581, 2)
+        umap_coord_list = sorted([str(i) for i in Path(
+            os.path.join(self.get_steinbock_out_dir, 'export')).rglob('*coordinates.csv')])
+
+        assert len(umap_coord_list) == 5
+
+        for umap_dist in umap_coord_list:
+            umap_coordinates = pd.read_csv(umap_dist)
+            assert umap_coordinates.shape == (581, 2)
 
     @pytest.mark.usefixtures("get_steinbock_out_dir")
     def test_roi_scaling(self):

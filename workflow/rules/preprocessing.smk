@@ -1,3 +1,6 @@
+
+version: "0.0.4"
+
 preprocessing_output = {
     "panel": expand("data/{projects}/panel.csv", projects = projects),
     "tiff_folder": expand("data/{projects}/img/raw", projects = projects),
