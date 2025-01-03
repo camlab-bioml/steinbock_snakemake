@@ -78,7 +78,7 @@ kmax: 5 # Max number of neighbors
 phenograph_k: 30 # Number of kearest neighbors to use for phenograph
 phenograph_min_cluster_size: 10 # Minimum number of cells requires for a cluster to be designated as a true cluster
 
-umap_min_dist: [0, 0.1, 0.25, 0.5, 1] #run the UMAP for every distanbce value passed
+umap_min_dist: [0, 0.1, 0.25, 0.5, 1] # run the UMAP for every distance value passed
 ```
 
 Under the `projects` configuration, add your folder name and the pipeline will process the mcd files in that folder, if you had not already done so. We will use the `test_mcd` project in this demonstration. 
@@ -126,7 +126,7 @@ The pipeline will be default run UMAP with the following minimum distance values
 0, 0.1, 0.25, 0.5, 1. These values can be changed by passing a list of values in the config as 'umap_min_dist';
 
 ```
-umap_min_dist: [0, 0.1, 0.25, 0.5, 1] #run the UMAP for every distanbce value passed
+umap_min_dist: [0, 0.1, 0.25, 0.5, 1] # run the UMAP for every distance value passed
 ```
 
 smaller UMAP distance values produce tighter more dispersed clusters, while larger values
@@ -146,7 +146,7 @@ cp config/config.yaml data/test_mcd/test_mcd.yaml
 ### Running the snakemake pipeline
 After completing the preflight configuration, we can run the pipeline. The `snakemake` command is invoked in the `steinbock-snakemake` directory:
 1. Specify cores required using the `-c` flag.
-2. Specify the configuration file used using the `--configfile` flag.
+2. Specify the configuration file to use using the `--configfile` flag.
 
 ```
 cd /home/tiakju/test_folder/steinbock_snakemake # navigate to the main directory where it is cloned
@@ -156,6 +156,8 @@ snakemake -c 4 --configfile data/test_mcd/test_mcd.yaml
 ### Inspect pipeline outputs
 
 This concludes this tutorial!
+
+The pipeline output directory structure for the current version is as follows:
 
 ```
 └── 📁test_mcd

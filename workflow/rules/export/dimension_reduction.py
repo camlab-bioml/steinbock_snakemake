@@ -3,7 +3,6 @@ import argparse
 import umap
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 
@@ -32,11 +31,9 @@ def set_plot_color_mapping(export_ad: ad.AnnData,
     label = None if mapped_cols is None else 'phenograph'
     return mapped_cols, cat_colors, label
 
-# Parser object
 parser = argparse.ArgumentParser(prog='UMAP',
                                  description='Generate UMAP coordinates for objects from an intensity h5ad.')
 
-# I/O Arguments
 parser.add_argument("-i", "--input", dest="input", action="store", default="", help="Input h5ad file.")
 parser.add_argument("-oc", "--output-coords", dest="output_coords", action="store",
                     default="umap_coordinates.csv", help="Output CSV file containing UMAP1 and UMAP1 coordinates.")
@@ -64,10 +61,6 @@ except (AttributeError, ImportError):
     umap_obj = umap.UMAP(min_dist=args.min_dist)
 scaled = StandardScaler().fit_transform(expr)
 embedding = pd.DataFrame(umap_obj.fit_transform(scaled), columns=["UMAP1", "UMAP2"])
-
-export.obsm[f'UMAP_{args.min_dist}'] = np.array(embedding).astype(np.float32)
-
-export.write_h5ad(args.input)
 
 embedding.to_csv(args.output_coords, index=False)
 

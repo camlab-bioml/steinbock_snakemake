@@ -51,8 +51,9 @@ class SteinbockSnakemakeIntegrationTests(unittest.TestCase):
 
         assert 'phenograph' in export_anndata.obs
 
-        # assert 'UMAP' in export_anndata.obsm
-        # assert export_anndata.obsm['UMAP'].shape == (581, 2)
+        for min_dist in [0, 0.1, 0.25, 0.5, 1]:
+            assert f'UMAP_min_dist_{min_dist}' in export_anndata.obsm
+            assert export_anndata.obsm[f'UMAP_min_dist_{min_dist}'].shape == (581, 2)
 
         umap_coord_list = sorted([str(i) for i in Path(
             os.path.join(self.get_steinbock_out_dir, 'export')).rglob('*coordinates.csv')])

@@ -15,3 +15,5 @@ rule all:
         deepcell.values(),
         quantification.values(),
         export.values()
+
+ruleorder: umap > collect_umap_dists

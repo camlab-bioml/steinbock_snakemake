@@ -4,7 +4,6 @@ export = {
     "export_all_ome": expand("data/{projects}/export/ome", projects = projects),
     "export_all_umap": expand("data/{projects}/export/umap/umap_min_dist_{umap_dist}_coordinates.csv", projects = projects, umap_dist = umap_dist),
     "export_umap_plots": expand("data/{projects}/export/umap/umap_min_dist_{umap_dist}.png", projects = projects, umap_dist = umap_dist),
-
 }
 
 rule export_all:
@@ -20,7 +19,7 @@ rule export_all:
         aggr = config["aggr"]
     output:
         dir = directory("data/{projects}/export/ome"),
-        h5ad = "data/{projects}/export/{projects}_export.h5ad",
+        h5ad = temp("{projects}_export.h5ad"),
         zarr = directory("data/{projects}/export/{projects}.zarr")
     threads: 24
     shell:
@@ -39,10 +38,10 @@ rule phenograph:
         k = config["phenograph_k"],
         min_cluster_size = config["phenograph_min_cluster_size"]
     output:
-        h5ad = "data/{projects}/export/{projects}.h5ad"
+        h5ad = temp("{projects}_pheno.h5ad")
     shell:
         """
-        mv {input.h5ad} {output.h5ad} && python {params.script} --input {output.h5ad} --output {output.h5ad} -k {params.k} -m {params.min_cluster_size} --normalize
+        python {params.script} --input {input.h5ad} --output {output.h5ad} -k {params.k} -m {params.min_cluster_size} --normalize
         """
 
 rule umap:
@@ -50,16 +49,32 @@ rule umap:
         h5ad = rules.phenograph.output.h5ad
     params:
         script = srcdir("export/dimension_reduction.py"),
-        min_dist = lambda wildcards: wildcards.umap_dist
-    conda: "steinbock-snakemake"
+        min_dist = lambda wildcards: wildcards.umap_dist,
+        tmp_file = temp("tmp_{params.min_dist}.h5ad")
     output:
         coords = "data/{projects}/export/umap/umap_min_dist_{umap_dist}_coordinates.csv",
-        plots = "data/{projects}/export/umap/umap_min_dist_{umap_dist}.png"
+        plots = "data/{projects}/export/umap/umap_min_dist_{umap_dist}.png",
     shell:
         """
         mkdir -p data/{projects}/export/umap/
-        cp {input.h5ad} data/{projects}/export/tmp_{params.min_dist}.h5ad
-        python {params.script} --input data/{projects}/export/tmp_{params.min_dist}.h5ad --output-coords {output.coords} \
+        cp {input.h5ad} {params.tmp_file}
+        python {params.script} --input {params.tmp_file} --output-coords {output.coords} \
         --normalize --min-dist {params.min_dist} --plot --output-plot {output.plots}
-        rm data/{projects}/export/tmp_{params.min_dist}.h5ad
+        """
+        
+rule collect_umap_dists:
+    input:
+        export_h5ad = rules.export_all.output.h5ad,
+        pheno_h5ad = rules.phenograph.output.h5ad,
+        plots = expand(
+            "data/{projects}/export/umap/umap_min_dist_{umap_dist}.png",
+            projects=projects, umap_dist=umap_dist)
+    output:
+        h5ad = "data/{projects}/export/{projects}.h5ad"
+    params:
+        script = srcdir("export/collect_umap_dists.py"),
+        dir = "data/{projects}/export/umap/"
+    shell:
+        """
+        python {params.script} -i {input.pheno_h5ad} -cd {params.dir} -o {output.h5ad}
         """
