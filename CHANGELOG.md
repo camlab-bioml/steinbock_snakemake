@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - JSON output for auto-scaling based on all ROIs for rakaia visualization
 - multi UMAP coordinate output for minimum distance + plotting w/ phenograph
+- Input channels to ignore for UMAP and phenograph clustering #22
 
 ## [v0.0.3]
 

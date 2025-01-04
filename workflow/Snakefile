@@ -1,5 +1,6 @@
 projects = config['projects']
 umap_dist = config['umap_min_dist'] if 'umap_min_dist' in config else [0, 0.1, 0.25, 0.5, 1]
+channels_ignore = config['channels_ignore_umap'] if 'channels_ignore_umap' in config else "None"
 
 # Rule Mesmer Pipeline: Deepcell segmentation
 include: "rules/preprocessing.smk"
