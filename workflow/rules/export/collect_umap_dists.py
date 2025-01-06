@@ -1,5 +1,5 @@
 """
-Collect all of the UMAP min distance coordinate lists into the export anndata
+Collect all the UMAP min distance coordinate lists into the export anndata
 """
 
 import argparse

@@ -37,7 +37,15 @@ cd ../..
 ## Running Steinbock-snakemake
 
 ### Data input and output structures
-Now that the containers and environment is set-up, we will run and test the pipeline on a small mcd file. This is the structure of the input folder:
+Now that the containers and environment is set-up, we will run and test the pipeline on a small mcd file. 
+
+Use the following command to copy the test dataset into the `data` directory:
+
+```commandline
+cp -r tests/test_mcd/ data/
+```
+
+After copying, the structure of the input data folder should appear as follows:
 ```
 ── 📁data
     └── 📁test_mcd
@@ -103,6 +111,21 @@ dmax: 15 # Max distance
 kmax: 5 # Max number of neighbors
 ```
 
+### Downstream channels
+
+Users should be cautious about which channels are selected for use in downstream analysis
+tasks such as UMAP projections and clustering. Certain channels such as gas channels (Argon, Xenon, etc.)
+can confound the cluster assignment and UMAP coordinates for IMC datasets and may not be biologically relevant.
+To remove these channels from these tasks, users should set the `channels_ignore_umap` config input as follows:
+
+```
+channels_ignore_umap: "ArAr80 Xe126 Xe131 Xe134" # proper syntax is space separated for each channel
+```
+In the example above, the pipeline will ignore 4 channels corresponding to gas measurements.
+This often leads to cleaner phenograph cluster assignments and better resolution for UMAPs.
+Note that this input should be changed to reflect the appropriate channel names set by the user.
+
+
 ### Basic clustering and dimension reduction
 
 The steinbock pipeline will additionally perform basic subpopulation cluster analysis 
@@ -132,7 +155,7 @@ umap_min_dist: [0, 0.1, 0.25, 0.5, 1] # run the UMAP for every distance value pa
 smaller UMAP distance values produce tighter more dispersed clusters, while larger values
 create fewer clusters and a more uniform manifold. 
 
-The UMAp coordinates for every distance used are stored in the `umap` sub-directory of the 
+The UMAP coordinates for every distance used are stored in the `umap` sub-directory of the 
 `export` output directory. Each distance is also plotted alongside the phenograph clustering to
 give users a general idea of cluster dispersion for different distance metrics. 
 
