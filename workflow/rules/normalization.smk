@@ -64,5 +64,5 @@ rule scaling:
     conda: "steinbock-snakemake"
     shell:
         """
-        python {params.script} -i {input.mcd} -o {output.json} -m {params.mode} -v -s {params.size_lim}
+        python {params.script} -i {input.mcd} -o {output.json} -v -s {params.size_lim} -ss 5000
         """

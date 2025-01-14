@@ -1,7 +1,13 @@
 # Steinbock-snakemake v0.0.4
 
-## Pipeline overview
-This steinbock pipeline uses mesmer to segment cells and nuclei, generate neighbors and finally outputs files required for downstream analysis. 
+## Overview
+
+Run the [steinbock](https://github.com/BodenmillerGroup/steinbock) workflow as a scalable module to process raw IMC data into files usable for visualization tools and downstream analysis. 
+
+This pipeline uses mesmer to segment cells and nuclei, generate neighbors and finally outputs files required for downstream analysis. 
+The `steinbock` functionality is wrapped with [snakemake](https://snakemake.readthedocs.io/en/stable/) to make computations more efficient and compatible
+with cluster and grid environments 
+
 
 ![DAG](dag.png)
 
@@ -212,6 +218,7 @@ The pipeline output directory structure for the current version is as follows:
             └── test_018_mask.tiff
         └── test_018.ome.tiff
         └── test_mcd.h5ad
+        └── scaling.json #used for rakaia visualization
         └── 📁umap
             └── umap_min_dist...coordinates.csv
             └── umap_min_dist...png
