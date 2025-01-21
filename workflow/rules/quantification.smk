@@ -1,4 +1,4 @@
-quantification = {
+    quantification = {
     "extract_intensities": expand("data/{projects}/quantification/intensities", projects = projects),
     "extract_neighbors": expand("data/{projects}/quantification/neighbors", projects = projects),
     "extract_regionprops": expand("data/{projects}/quantification/regionprops", projects = projects),

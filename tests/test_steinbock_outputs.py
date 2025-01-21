@@ -7,6 +7,8 @@ import unittest
 import pytest
 import glob
 import tifffile
+import json
+from pathlib import Path
 
 
 class SteinbockSnakemakeIntegrationTests(unittest.TestCase):
@@ -49,9 +51,32 @@ class SteinbockSnakemakeIntegrationTests(unittest.TestCase):
 
         assert 'phenograph' in export_anndata.obs
 
-        assert 'UMAP' in export_anndata.obsm
-        assert export_anndata.obsm['UMAP'].shape == (581, 2)
+        for min_dist in [0, 0.1, 0.25, 0.5, 1]:
+            assert f'UMAP_min_dist_{min_dist}' in export_anndata.obsm
+            assert export_anndata.obsm[f'UMAP_min_dist_{min_dist}'].shape == (581, 2)
 
-        umap_coordinates = pd.read_csv(os.path.join(self.get_steinbock_out_dir, 'export',
-                                           'umap_coordinates.csv'))
-        assert umap_coordinates.shape == (581, 2)
+        umap_coord_list = sorted([str(i) for i in Path(
+            os.path.join(self.get_steinbock_out_dir, 'export')).rglob('*coordinates.csv')])
+
+        assert len(umap_coord_list) == 5
+
+        for umap_dist in umap_coord_list:
+            umap_coordinates = pd.read_csv(umap_dist)
+            assert umap_coordinates.shape == (581, 2)
+
+        umap_plot_list = sorted([str(i) for i in Path(
+            os.path.join(self.get_steinbock_out_dir, 'export')).rglob('*.png')])
+
+        for min_dist in [0, 0.1, 0.25, 0.5, 1]:
+            assert (any([str(min_dist) in plot_file for plot_file in umap_plot_list]))
+
+        assert len(umap_plot_list) == 5
+
+    @pytest.mark.usefixtures("get_steinbock_out_dir")
+    def test_roi_scaling(self):
+        with open(os.path.join(self.get_steinbock_out_dir,
+                               'export', 'scaling.json')) as json_file:
+            scaling = json.load(json_file)
+            assert isinstance(scaling, dict)
+            assert 'channels' in list(scaling.keys())
+            assert len(scaling['channels']) == 12

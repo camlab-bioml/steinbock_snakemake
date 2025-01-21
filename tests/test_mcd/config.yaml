@@ -19,3 +19,5 @@ kmax: 5
 
 phenograph_k: 30
 phenograph_min_cluster_size: 10
+
+channels_ignore_umap: "ArAr80 Xe126 Xe131 Xe134"
