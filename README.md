@@ -21,25 +21,6 @@ conda env create -y --file=workflow/env/environment.yml
 conda activate steinbock-snakemake
 ```
 
-## OPTIONAL: Cloning docker containers. From v0.0.2 onwards cloning of the steinbock docker containers will no longer be required. 
-
-### Cloning CPU-based container (Recommended)
-After successful creation of the environment, we will then generate a singularity container for use with the snakemake pipeline. This container will require about ~4GB of storage, and will be located under workflow/envs
-
-```
-cd workflow/env
-singularity pull steinbock-cpu.sif docker://ghcr.io/bodenmillergroup/steinbock:0.16.1
-cd ../..
-```
-
-### Cloning GPU-based container (Not Recommended)
-This will clone the GPU container for steinbock. Note, you will require `nvidia-container-toolkit` and require CUDA drivers (CUDA 11.8) to run the pipeline. Only use this for large datasets that require GPU support.
-```
-cd workflow/env
-singularity pull steinbock-gpu.sif docker://ghcr.io/bodenmillergroup/steinbock:0.16.1-gpu
-cd ../..
-```
-
 ## Running Steinbock-snakemake
 
 ### Data input and output structures
@@ -178,7 +159,7 @@ After completing the preflight configuration, we can run the pipeline. The `snak
 2. Specify the configuration file to use using the `--configfile` flag.
 
 ```
-cd /home/tiakju/test_folder/steinbock_snakemake # navigate to the main directory where it is cloned
+cd ~/test_folder/steinbock_snakemake # navigate to the main directory where it is cloned
 snakemake -c 4 --configfile data/test_mcd/test_mcd.yaml
 ```
 

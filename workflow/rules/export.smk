@@ -35,7 +35,7 @@ rule phenograph:
         h5ad = rules.export_all.output.h5ad,
         panel = rules.create_panel.output
     params:
-        script = srcdir("export/phenograph_clustering.py"),
+        script = "workflow/scripts/phenograph_clustering.py",
         k = config["phenograph_k"],
         min_cluster_size = config["phenograph_min_cluster_size"],
         channels_ignore = channels_ignore
@@ -51,7 +51,7 @@ rule umap:
         h5ad = rules.phenograph.output.h5ad,
         panel = rules.create_panel.output
     params:
-        script = srcdir("export/dimension_reduction.py"),
+        script = "workflow/scripts/dimension_reduction.py",
         min_dist = lambda wildcards: wildcards.umap_dist,
         channels_ignore = channels_ignore
     output:
@@ -76,7 +76,7 @@ rule collect_umap_dists:
     output:
         h5ad = "data/{projects}/export/{projects}.h5ad"
     params:
-        script = srcdir("export/collect_umap_dists.py"),
+        script = "workflow/scripts/collect_umap_dists.py",
         dir = "data/{projects}/export/umap/"
     shell:
         """

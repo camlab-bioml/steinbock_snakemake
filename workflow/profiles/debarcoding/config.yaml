@@ -1,0 +1,7 @@
+use-conda: "True"
+conda-base-path: "/ddn_exa/campbell/ttan2/miniconda3"
+configfile: "data/debarcoding/config.yaml"
+cores: 10
+directory: "/ddn_exa/campbell/ttan2/steinbock_snakemake"
+snakefile: "workflow/Snakefile"
+jobs: 100

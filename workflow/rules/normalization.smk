@@ -58,7 +58,7 @@ rule scaling:
         json = "data/{projects}/export/scaling.json"
     threads: 1
     params:
-        script = srcdir("normalization/scaling.py"),
+        script = "workflow/scripts/scaling.py",
         mode = config["scaling_mode"] if "scaling_mode" in config else "mean",
         size_lim = config["scaling_size_limit_px"] if "scaling_size_limit_px" in config else 100
     conda: "steinbock-snakemake"

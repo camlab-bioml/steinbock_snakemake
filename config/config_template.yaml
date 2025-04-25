@@ -1,8 +1,5 @@
-####################################
-# Configuration files for sequanix #
-####################################
 projects:
-  - training# Informs the snakemake pipeline which projects to process
+  -  # Informs the snakemake pipeline which projects to process
 
 seed: 123L
 hpf: 0 # hot pixel filter
