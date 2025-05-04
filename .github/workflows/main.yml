@@ -28,7 +28,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
-          environment-file: workflow/env/environment.yml
+          environment-file: workflow/env/environment.yaml
           activate-environment: steinbock-snakemake
           channels: conda-forge,bioconda,defaults
           CONDA_OVERRIDE_CUDA: "11.8"
