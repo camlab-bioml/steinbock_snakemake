@@ -1,15 +1,14 @@
-    quantification = {
+quantification = {
     "extract_intensities": expand("data/{projects}/quantification/intensities", projects = projects),
     "extract_neighbors": expand("data/{projects}/quantification/neighbors", projects = projects),
     "extract_regionprops": expand("data/{projects}/quantification/regionprops", projects = projects),
 }
 
-
 rule extract_intensities:
     input:
         masks = rules.deepcell_wholecell.output,
-        img = rules.generate_tiff.output.place,
-        panel = rules.create_panel.output
+        img = rules.generate_tiff.output.tiff_folder,
+        panel = rules.create_panel.output.panel
     params:
         aggr = config["aggr"]
     output:
@@ -52,7 +51,7 @@ rule extract_neighbors:
 rule extract_regionprops:
     input:
         masks = rules.deepcell_wholecell.output,
-        img = rules.generate_tiff.output.place
+        img = rules.generate_tiff.output.tiff_folder
     params:
         aggr = config["aggr"]
     output:

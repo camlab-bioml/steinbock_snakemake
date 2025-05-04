@@ -1,5 +1,4 @@
 export = {
-    "export_all_zarr": expand("data/{projects}/export/{projects}.zarr", projects = projects),
     "export_all_h5ad": expand("data/{projects}/export/{projects}.h5ad", projects = projects),
     "export_all_ome": expand("data/{projects}/export/ome", projects = projects),
     "export_all_umap": expand("data/{projects}/export/umap/umap_min_dist_{umap_dist}_coordinates.csv", projects = projects, umap_dist = umap_dist),
@@ -9,8 +8,8 @@ export = {
 rule export_all:
     input:
         masks = rules.deepcell_wholecell.output,
-        img = rules.generate_tiff.output.place,
-        imginfo = rules.generate_tiff.output.stats,
+        img = rules.generate_tiff.output.tiff_folder,
+        imginfo = rules.generate_tiff.output.tiff_metadata,
         panel = rules.create_panel.output,
         intensities = rules.extract_intensities.output,
         regionprops = rules.extract_regionprops.output,
@@ -19,14 +18,13 @@ rule export_all:
         aggr = config["aggr"]
     output:
         dir = directory("data/{projects}/export/ome"),
-        h5ad = temp("{projects}_export.h5ad"),
-        zarr = directory("data/{projects}/export/{projects}.zarr")
+        h5ad = temp("{projects}_export.h5ad")
     threads: 24
+    conda: "steinbock-snakemake"
     shell:
         """
         steinbock export ome --img {input.img} --panel {input.panel} -o {output.dir}
         steinbock export histocat --img {input.img} --masks {input.masks} --panel {input.panel} -o {output.dir}
-        steinbock export anndata --intensities {input.intensities} --data {input.regionprops} --neighbors {input.neighbors} --panel {input.panel} --info {input.imginfo} --format zarr -o {output.zarr}
         steinbock export anndata --intensities {input.intensities} --data {input.regionprops} --neighbors {input.neighbors} --panel {input.panel} --info {input.imginfo} --format h5ad -o {output.h5ad}
         """
 
@@ -41,6 +39,8 @@ rule phenograph:
         channels_ignore = channels_ignore
     output:
         h5ad = temp("{projects}_pheno.h5ad")
+    threads: 24
+    conda: "steinbock-snakemake"
     shell:
         """
         python {params.script} -i {input.h5ad} -o {output.h5ad} -k {params.k} -m {params.min_cluster_size} --normalize -ci {params.channels_ignore} -p {input.panel}
@@ -58,6 +58,8 @@ rule umap:
         coords = "data/{projects}/export/umap/umap_min_dist_{umap_dist}_coordinates.csv",
         plots = "data/{projects}/export/umap/umap_min_dist_{umap_dist}.png",
         tmp_file = temp("tmp_{projects}_{umap_dist}.h5ad")
+    threads: 24
+    conda: "steinbock-snakemake"
     shell:
         """
         mkdir -p data/{projects}/export/umap/
@@ -73,11 +75,13 @@ rule collect_umap_dists:
         plots = expand(
             "data/{projects}/export/umap/umap_min_dist_{umap_dist}.png",
             projects=projects, umap_dist=umap_dist)
-    output:
-        h5ad = "data/{projects}/export/{projects}.h5ad"
     params:
         script = "workflow/scripts/collect_umap_dists.py",
         dir = "data/{projects}/export/umap/"
+    output:
+        h5ad = "data/{projects}/export/{projects}.h5ad"
+    threads: 24
+    conda: "steinbock-snakemake"
     shell:
         """
         python {params.script} -i {input.pheno_h5ad} -cd {params.dir} -o {output.h5ad}
