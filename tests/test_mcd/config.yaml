@@ -12,6 +12,7 @@ cytoplasm: # Cytoplasm Channel.
 
 deepcell_app: "mesmer"
 deepcell_model: "MultiplexSegmentation"
+deepcell_modelpath: "/opt/keras/models"
 deepcell_pxsize: 1
 aggr: "mean" # Aggregation of signal. Can be either of these [mean|median]
 neighbor_type: "borders" # Consideration of each neighbor
