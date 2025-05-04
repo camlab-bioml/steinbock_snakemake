@@ -25,3 +25,8 @@ __pycache__/*
 *.pyc
 
 sandbox/
+.Rproj.user
+.Rproj
+.RData
+.Rhistory
+

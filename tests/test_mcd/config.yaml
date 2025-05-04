@@ -6,6 +6,7 @@ hpf: 0 # hot pixel filter
 
 nuclear: # Nuclear Channel.
   - "Ir191"
+  
 cytoplasm: # Cytoplasm Channel.
   - "Er166"
   - "Dy162"
