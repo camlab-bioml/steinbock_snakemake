@@ -4,12 +4,11 @@ deepcell = {
     "deepcell_wholecell": expand("data/{projects}/deepcell/cell", projects = projects),
 }
 
-
 rule deepcell_prepare:
     input:
         rules.create_panel.output
     output:
-        "data/{projects}/panel_deepcell.csv"
+        panel_deepcell = "data/{projects}/panel_deepcell.csv"
     params:
         script = "workflow/scripts/deepcell_prepare.py",
         cytoplasm = config["cytoplasm"],
@@ -26,8 +25,8 @@ rule deepcell_prepare:
 
 rule deepcell_nuclei:
     input:
-        img = rules.generate_tiff.output.place,
-        panel = rules.deepcell_prepare.output
+        img = rules.generate_tiff.output.tiff_folder,
+        panel = rules.deepcell_prepare.output.panel_deepcell
     params:
         app = config["deepcell_app"],
         model = config["deepcell_model"],
@@ -45,7 +44,6 @@ rule deepcell_nuclei:
             --modeldir {params.model_path} \
             --type nuclear \
             --img {input.img} \
-            --zscore \
             --minmax \
             --panel {input.panel} \
             --pixelsize {params.px_size} \
@@ -55,7 +53,7 @@ rule deepcell_nuclei:
 
 rule deepcell_wholecell:
     input:
-        img = rules.generate_tiff.output.place,
+        img = rules.generate_tiff.output.tiff_folder,
         panel = rules.deepcell_prepare.output
     params:
         app = config["deepcell_app"],
@@ -64,6 +62,7 @@ rule deepcell_wholecell:
         px_size = config["deepcell_pxsize"]
     output:
         directory("data/{projects}/deepcell/cell")
+    conda: "steinbock-snakemake"
     threads: 24
     shell:
         """
@@ -74,7 +73,6 @@ rule deepcell_wholecell:
             --type whole-cell \
             --img {input.img} \
             --minmax \
-            --zscore \
             --panel {input.panel} \
             --pixelsize {params.px_size} \
             -o {output} \

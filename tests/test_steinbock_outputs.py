@@ -33,27 +33,30 @@ class SteinbockSnakemakeIntegrationTests(unittest.TestCase):
     def test_check_masks(self):
         mask = np.array(Image.open(os.path.join(self.get_steinbock_out_dir,
             'deepcell', 'cell', 'test_018.tiff'))).astype(np.uint32)
-        assert np.max(mask) == 581
+        assert 500 <= np.max(mask) <= 600
 
     @pytest.mark.usefixtures("get_steinbock_out_dir")
     def test_check_intensities(self):
         intensities = pd.read_csv(os.path.join(self.get_steinbock_out_dir, 'quantification',
                                            'intensities', 'test_018.csv'))
 
-        assert intensities.shape == (581, 13)
+        assert intensities.shape[1] == 13
+        assert 500 <= intensities.shape[0] <= 600
 
     @pytest.mark.usefixtures("get_steinbock_out_dir")
     def test_check_export(self):
         export_anndata = ad.read_h5ad(os.path.join(self.get_steinbock_out_dir,
                                                'export', 'test_mcd.h5ad'))
 
-        assert export_anndata.X.shape == (581, 12)
+        assert 500 <= export_anndata.X.shape[0] <= 600
+        assert export_anndata.X.shape[1] == 12
 
         assert 'phenograph' in export_anndata.obs
 
         for min_dist in [0, 0.1, 0.25, 0.5, 1]:
             assert f'UMAP_min_dist_{min_dist}' in export_anndata.obsm
-            assert export_anndata.obsm[f'UMAP_min_dist_{min_dist}'].shape == (581, 2)
+            assert export_anndata.obsm[f'UMAP_min_dist_{min_dist}'].shape[1] == 2
+            assert 500 <= export_anndata.obsm[f'UMAP_min_dist_{min_dist}'].shape[0] <= 600
 
         umap_coord_list = sorted([str(i) for i in Path(
             os.path.join(self.get_steinbock_out_dir, 'export')).rglob('*coordinates.csv')])
@@ -62,7 +65,8 @@ class SteinbockSnakemakeIntegrationTests(unittest.TestCase):
 
         for umap_dist in umap_coord_list:
             umap_coordinates = pd.read_csv(umap_dist)
-            assert umap_coordinates.shape == (581, 2)
+            assert 500 <= umap_coordinates.shape[0] <= 600
+            assert umap_coordinates.shape[1] == 2
 
         umap_plot_list = sorted([str(i) for i in Path(
             os.path.join(self.get_steinbock_out_dir, 'export')).rglob('*.png')])

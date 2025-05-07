@@ -1,5 +1,4 @@
-
-version: "0.0.4"
+version: "0.0.5"
 
 preprocessing_output = {
     "panel": expand("data/{projects}/panel.csv", projects = projects),
@@ -9,36 +8,36 @@ preprocessing_output = {
 
 rule create_panel:
     input:
-        a = "data/{projects}/mcd"
+        mcd = "data/{projects}/mcd"
     output:
-        "data/{projects}/panel.csv"
+        panel = "data/{projects}/panel.csv"
     conda: "steinbock-snakemake"
     shell:
         """
         steinbock preprocess imc panel \
-            --mcd {input.a} \
+            --mcd {input.mcd} \
             -o {output} \
             --verbosity INFO
         """
 
 rule generate_tiff:
     input:
-        a = rules.create_panel.output,
-        b = "data/{projects}/mcd"
+        panel = rules.create_panel.output,
+        mcd = "data/{projects}/mcd"
     params:
         hpf = config['hpf']
     output:
-        place = directory("data/{projects}/img/raw"),
-        stats = "data/{projects}/img/images.csv"
+        tiff_folder = directory("data/{projects}/img/raw"),
+        tiff_metadata = "data/{projects}/img/images.csv"
     conda: "steinbock-snakemake"
     shell:
         """
-        steinbock preprocess imc images --mcd {input.b} \
-                                        --txt {input.b} \
-                                        --panel {input.a} \
-                                        --imgout {output.place} \
+        steinbock preprocess imc images --mcd {input.mcd} \
+                                        --txt {input.mcd} \
+                                        --panel {input.panel} \
+                                        --imgout {output.tiff_folder} \
                                         --hpf {params.hpf} \
-                                        --infoout {output.stats} \
+                                        --infoout {output.tiff_metadata} \
                                         --verbosity DEBUG \
                                         --strict True
         """

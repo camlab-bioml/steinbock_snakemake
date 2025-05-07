@@ -1,15 +1,12 @@
-# Steinbock-snakemake v0.0.4
+# Steinbock-snakemake v0.0.5
 
 ## Overview
 
 Run the [steinbock](https://github.com/BodenmillerGroup/steinbock) workflow as a scalable module to process raw IMC data into files usable for visualization tools and downstream analysis. 
 
-This pipeline uses mesmer to segment cells and nuclei, generate neighbors and finally outputs files required for downstream analysis. 
-The `steinbock` functionality is wrapped with [snakemake](https://snakemake.readthedocs.io/en/stable/) to make computations more efficient and compatible
-with cluster and grid environments 
+This pipeline uses preprocesses the mcd files, segment cells and nuclei, generate neighbors and finally outputs files required for downstream analysis. 
 
-
-![DAG](dag.png)
+The `steinbock` functionality is wrapped with [snakemake](https://snakemake.readthedocs.io/en/stable/) to make computations more efficient and compatible with cluster and grid environments.
 
 ## Set-up pipeline environment (via conda, pip)
 
@@ -21,31 +18,12 @@ conda env create -y --file=workflow/env/environment.yml
 conda activate steinbock-snakemake
 ```
 
-## OPTIONAL: Cloning docker containers. From v0.0.2 onwards cloning of the steinbock docker containers will no longer be required. 
-
-### Cloning CPU-based container (Recommended)
-After successful creation of the environment, we will then generate a singularity container for use with the snakemake pipeline. This container will require about ~4GB of storage, and will be located under workflow/envs
-
-```
-cd workflow/env
-singularity pull steinbock-cpu.sif docker://ghcr.io/bodenmillergroup/steinbock:0.16.1
-cd ../..
-```
-
-### Cloning GPU-based container (Not Recommended)
-This will clone the GPU container for steinbock. Note, you will require `nvidia-container-toolkit` and require CUDA drivers (CUDA 11.8) to run the pipeline. Only use this for large datasets that require GPU support.
-```
-cd workflow/env
-singularity pull steinbock-gpu.sif docker://ghcr.io/bodenmillergroup/steinbock:0.16.1-gpu
-cd ../..
-```
-
 ## Running Steinbock-snakemake
 
 ### Data input and output structures
 Now that the containers and environment is set-up, we will run and test the pipeline on a small mcd file. 
 
-Use the following command to copy the test dataset into the `data` directory:
+Use the following command to copy the test dataset into the `data` which directory:
 
 ```commandline
 cp -r tests/test_mcd/ data/
@@ -74,6 +52,15 @@ Before running the pipeline, we will first take a look at the configuration file
 projects:
   - test_mcd # Informs the snakemake pipeline which projects to process
 
+seed: 123L
+hpf: 0 # hot pixel filter
+
+nuclear: # Nuclear Channel. For multiple channels the syntax is "Ir191 Ir193 Dy162"
+  - ""
+cytoplasm: # Cytoplasm Channel. For multiple channels the syntax is "Ir191 Ir193 Dy162"
+  - ""
+  - ""
+
 # Options for mesmer_pipeline
 seed: 123L
 hpf: 5 # hot pixel filter
@@ -93,8 +80,8 @@ phenograph_k: 30 # Number of kearest neighbors to use for phenograph
 phenograph_min_cluster_size: 10 # Minimum number of cells requires for a cluster to be designated as a true cluster
 
 umap_min_dist: [0, 0.1, 0.25, 0.5, 1] # run the UMAP for every distance value passed
-```
 
+```
 Under the `projects` configuration, add your folder name and the pipeline will process the mcd files in that folder, if you had not already done so. We will use the `test_mcd` project in this demonstration. 
 ```
 projects:
@@ -161,7 +148,7 @@ umap_min_dist: [0, 0.1, 0.25, 0.5, 1] # run the UMAP for every distance value pa
 smaller UMAP distance values produce tighter more dispersed clusters, while larger values
 create fewer clusters and a more uniform manifold. 
 
-The UMAP coordinates for every distance used are stored in the `umap` sub-directory of the 
+The UMAP coordinates for every distance used are stored in the `umap` sub-directory of th   e 
 `export` output directory. Each distance is also plotted alongside the phenograph clustering to
 give users a general idea of cluster dispersion for different distance metrics. 
 
@@ -173,13 +160,21 @@ cp config/config.yaml data/test_mcd/test_mcd.yaml
 ```
 
 ### Running the snakemake pipeline
-After completing the preflight configuration, we can run the pipeline. The `snakemake` command is invoked in the `steinbock-snakemake` directory:
-1. Specify cores required using the `-c` flag.
-2. Specify the configuration file to use using the `--configfile` flag.
+After completing the preflight configuration, we can run the pipeline with a defined pipeline profile. In `workflow/profiles/test_mcd` is an example of the profile config to use. You can create a folder under `workflow/profiles/<your_folder>` and inside must contain a `config.yaml` file for the profile to execute. In the `config.yaml` file, we specify the following snakemake settings
 
 ```
-cd /home/tiakju/test_folder/steinbock_snakemake # navigate to the main directory where it is cloned
-snakemake -c 4 --configfile data/test_mcd/test_mcd.yaml
+use-conda: "True"
+conda-base-path: "~/miniconda3" # base path to conda
+configfile: "data/test_mcd/config.yaml" # path to the preflight config file we previously used
+cores: 10 # Number of cores to give the pipeline
+directory: "~/steinbock_snakemake" # current working directory
+snakefile: "workflow/Snakefile" # location of Snakefile
+```
+
+After that, make sure you are in the `steinbock_snakemake` root folder with an environment containing the `snakemake` command, and run the pipeline.
+
+```
+snakemake --workflow-profile workflow/profiles/test_mcd
 ```
 
 ### Inspect pipeline outputs

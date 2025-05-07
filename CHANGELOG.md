@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.0.5]
+
+### Added
+- Updated environment.yaml file for quick conda install.
+- Likely frozen version for main.
+- Snakemake profiles for 1 line pipeline execution with configured snakemake options for newer versions of snakemake >= 8. 
+
+### Changed
+- Verbosity improvements for snakemake rule pointers
+
+### Removed
+- DAG Removed (Not much purpose)
+- archsinh, zscale and mixmax previews removed for lightweight pipeline. 
+- Removed srcdir() functions in quantification rules as they are deprecated.
+
 ## [v0.0.4]
 
 ### Added
