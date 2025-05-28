@@ -1,0 +1,28 @@
+projects:
+  - test_txt # Informs the snakemake pipeline which projects to process
+
+seed: 123L
+hpf: 0 # hot pixel filter
+
+nuclear: # Nuclear Channel.
+  - "Ir191"
+  
+cytoplasm: # Cytoplasm Channel.
+  - "Er166"
+  - "Dy162"
+
+deepcell_app: "mesmer"
+deepcell_model: "MultiplexSegmentation"
+deepcell_modelpath: "/opt/keras/models"
+deepcell_pxsize: 1
+aggr: "mean" # Aggregation of signal. Can be either of these [mean|median]
+neighbor_type: "borders" # Consideration of each neighbor
+dmax: 15
+kmax: 5
+
+phenograph_k: 30
+phenograph_min_cluster_size: 10
+
+process_txt: True
+
+channels_ignore_umap: "ArAr80 Xe126 Xe131 Xe134" # example of ignoring 4 gas channels in downstream analysis
