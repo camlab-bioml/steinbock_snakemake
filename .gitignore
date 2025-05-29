@@ -7,7 +7,6 @@
 *.h5
 *.h5ad
 *.csv
-*.log
 *.js
 *.css
 *.woff
@@ -24,9 +23,8 @@ __pycache__/*
 
 *.pyc
 
-sandbox/
 .Rproj.user
 .Rproj
 .RData
 .Rhistory
-
+*.Rproj

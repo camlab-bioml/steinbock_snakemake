@@ -1,4 +1,4 @@
-# Steinbock-snakemake v0.0.5
+# Steinbock-snakemake v0.0.6
 
 ## Overview
 
@@ -36,6 +36,18 @@ After copying, the structure of the input data folder should appear as follows:
         └── 📁mcd # Folder for you XTi mcd file or Hyperion mcd file. .txt files are also supported.
             └── test.mcd
 ```
+
+### mcd vs. txt files
+
+By default, the pipeline will expect mcd files in the `mcd` directory. If users are processing .txt files,
+the config file should be modified to specify processing txt files:
+
+```commandline
+process_txt: True
+```
+
+For processing mcds, this field in the config can be set to `False` or excluded entirely. 
+
 
 ### Creating a new project
 Each project is given a directory under the data folder. To create a new project, make a new folder under `data/yourproject` and add a `data/yourproject/mcd` folder. Drag and drop your `yourproject.mcd` into the mcd folder. The minimum requirement for the project folder structure is as shown:

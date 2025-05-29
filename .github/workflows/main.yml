@@ -1,5 +1,4 @@
 name: run steinbock with snakemake integration testing
-
 on:
   push:
     branches:
@@ -7,7 +6,6 @@ on:
   pull_request:
     branches:
       - main
-
 jobs:
   build:
     name: steinbock-snakemake test on ${{ matrix.os }}
@@ -34,10 +32,13 @@ jobs:
           CONDA_OVERRIDE_CUDA: "11.8"
       - name: Set up integration test data directory
         shell: bash -l {0}
-        run: mkdir data && cp -r tests/test_mcd data/
-      - name: Run pipeline
+        run: mkdir data && cp -r tests/test_mcd data/ && cp -r tests/test_txt data/
+      - name: Run pipeline with mcd
         shell: bash -l {0}
-        run: snakemake --cores all --configfile data/test_mcd/config.yaml 
+        run: snakemake --cores all --configfile data/test_mcd/config.yaml
+      - name: Run pipeline with txt
+        shell: bash -l {0}
+        run: snakemake --cores all --configfile data/test_txt/config.yaml
       - name: Install and run pytest
         shell: bash -l {0}
         run: |

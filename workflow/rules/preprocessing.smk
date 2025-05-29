@@ -1,4 +1,4 @@
-version: "0.0.5"
+version: "0.0.6"
 
 preprocessing_output = {
     "panel": expand("data/{projects}/panel.csv", projects = projects),
@@ -12,10 +12,12 @@ rule create_panel:
     output:
         panel = "data/{projects}/panel.csv"
     conda: "steinbock-snakemake"
+    params:
+        type = "mcd" if not process_txt else "txt"
     shell:
         """
         steinbock preprocess imc panel \
-            --mcd {input.mcd} \
+            --{params.type} {input.mcd} \
             -o {output} \
             --verbosity INFO
         """
