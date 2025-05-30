@@ -52,6 +52,7 @@ class SteinbockSnakemakeIntegrationTestsMCD(unittest.TestCase):
         assert export_anndata.X.shape[1] == 12
 
         assert 'phenograph' in export_anndata.obs
+        assert 'mask_id' in export_anndata.obs
 
         for min_dist in [0, 0.1, 0.25, 0.5, 1]:
             assert f'UMAP_min_dist_{min_dist}' in export_anndata.obsm
@@ -127,6 +128,7 @@ class SteinbockSnakemakeIntegrationTestsTXT(unittest.TestCase):
         assert export_anndata.X.shape[1] == 12
 
         assert 'phenograph' in export_anndata.obs
+        assert 'mask_id' in export_anndata.obs
 
         for min_dist in [0, 0.1, 0.25, 0.5, 1]:
             assert f'UMAP_min_dist_{min_dist}' in export_anndata.obsm

@@ -1,3 +1,4 @@
+import re
 import anndata as ad
 import phenograph
 import argparse
@@ -24,6 +25,9 @@ parser.add_argument("-p", "--panel", dest="panel", action="store", default="pane
 args = parser.parse_args()
 
 export = ad.read_h5ad(args.input)
+
+export.obs['mask_id'] = [int(re.search(r'\d+', elem).group()) for elem in
+                                           export.obs.index]
 
 # column normalize?
 expr = ((export.X - export.X.min()) / (export.X.max() - export.X.min())) if args.normalize else export.X

@@ -4,7 +4,6 @@ Collect all the UMAP min distance coordinate lists into the export anndata
 
 import argparse
 
-
 from pathlib import Path
 import anndata as ad
 import pandas as pd
