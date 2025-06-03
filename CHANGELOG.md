@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v0.0.6]
 
+### Added
+
+- `mask_id` segmentation ID column now part of `export.h5ad` .obs
+- RGB of nuclear markers + segmentation overlay in `deepcell`, `overlay` #28
+
 ### Changed
 
 - Conditional parse of txt files or mcd (mcd by default) using config `process_txt` #26

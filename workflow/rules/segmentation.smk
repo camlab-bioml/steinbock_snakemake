@@ -2,6 +2,7 @@ deepcell = {
     "panel_deepcell": expand("data/{projects}/panel_deepcell.csv", projects = projects),
     "deepcell_nuclei": expand("data/{projects}/deepcell/nuclei", projects = projects),
     "deepcell_wholecell": expand("data/{projects}/deepcell/cell", projects = projects),
+    "deepcell_overlay": expand("data/{projects}/deepcell/overlay", projects = projects)
 }
 
 rule deepcell_prepare:
@@ -78,5 +79,18 @@ rule deepcell_wholecell:
             -o {output} \
             -v DEBUG
         """
-        
 
+rule nuclear_overlay:
+    input:
+        img = rules.generate_tiff.output.tiff_folder,
+        panel = rules.deepcell_prepare.output.panel_deepcell,
+        mask_dir = rules.deepcell_wholecell.output
+    output:
+        directory("data/{projects}/deepcell/overlay")
+    params:
+        script = "workflow/scripts/nuclear_overlay.py"
+    shell:
+        """
+        mkdir -p {output}
+        python {params.script} -i {input.img} -p {input.panel} -o {output} -m {input.mask_dir} -t tiff
+        """

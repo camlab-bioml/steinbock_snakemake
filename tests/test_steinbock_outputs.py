@@ -52,6 +52,7 @@ class SteinbockSnakemakeIntegrationTestsMCD(unittest.TestCase):
         assert export_anndata.X.shape[1] == 12
 
         assert 'phenograph' in export_anndata.obs
+        assert 'mask_id' in export_anndata.obs
 
         for min_dist in [0, 0.1, 0.25, 0.5, 1]:
             assert f'UMAP_min_dist_{min_dist}' in export_anndata.obsm
@@ -84,6 +85,14 @@ class SteinbockSnakemakeIntegrationTestsMCD(unittest.TestCase):
             assert isinstance(scaling, dict)
             assert 'channels' in list(scaling.keys())
             assert len(scaling['channels']) == 12
+
+    @pytest.mark.usefixtures("get_steinbock_out_dir_mcd")
+    def test_roi_nuclear_overlay(self):
+
+        overlay_path = os.path.join(self.get_steinbock_out_dir_mcd, 'deepcell', 'overlay')
+        assert os.path.isdir(overlay_path)
+        overlay_roi = glob.glob(f"{overlay_path}/*.tiff")
+        assert len(overlay_roi) == 1
 
 
 class SteinbockSnakemakeIntegrationTestsTXT(unittest.TestCase):
@@ -127,6 +136,7 @@ class SteinbockSnakemakeIntegrationTestsTXT(unittest.TestCase):
         assert export_anndata.X.shape[1] == 12
 
         assert 'phenograph' in export_anndata.obs
+        assert 'mask_id' in export_anndata.obs
 
         for min_dist in [0, 0.1, 0.25, 0.5, 1]:
             assert f'UMAP_min_dist_{min_dist}' in export_anndata.obsm
@@ -159,3 +169,11 @@ class SteinbockSnakemakeIntegrationTestsTXT(unittest.TestCase):
             assert isinstance(scaling, dict)
             assert 'channels' in list(scaling.keys())
             assert len(scaling['channels']) == 12
+
+    @pytest.mark.usefixtures("get_steinbock_out_dir_txt")
+    def test_roi_nuclear_overlay(self):
+
+        overlay_path = os.path.join(self.get_steinbock_out_dir_txt, 'deepcell', 'overlay')
+        assert os.path.isdir(overlay_path)
+        overlay_roi = glob.glob(f"{overlay_path}/*.tiff")
+        assert len(overlay_roi) == 1

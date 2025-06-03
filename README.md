@@ -196,45 +196,63 @@ This concludes this tutorial!
 The pipeline output directory structure for the current version is as follows:
 
 ```
-└── 📁test_mcd
-    └── 📁deepcell # outputs for deepcell segmentation and masks per ROI
-        └── 📁intensities
-            └── test_018.csv
-        └── 📁neighbors
-            └── test_018.csv
-        └── 📁nuclei
-            └── test_018.tiff
-        └── 📁regionprops
-            └── test_018.csv
-        └── 📁whole_cell
-            └── test_018.tiff
-    └── 📁export # Exports per channel tiff for each ROI, an ome.tiff file and a anndata object
-        └── 📁test_018
-            └── ArAr80_80ArAr.tiff
-            └── Dy162_162Dy_h5454_Chr10SAT.tiff
-            └── Er166_166Er_h3838_Chr1SAT.tiff
-            └── Er167_167Er_h3838_Chr1SAT.tiff
-            └── Gd158_158Gd_h5050_Chr2SAT.tiff
-            └── Ir191_191Ir_DNA1.tiff
-            └── Ir193_193Ir_DNA2.tiff
-            └── Pb206_206Pb.tiff
-            └── Pb208_208Pb.tiff
-            └── Xe126_126Xe.tiff
-            └── Xe131_131Xe.tiff
-            └── Xe134_134Xe.tiff
-            └── test_018_mask.tiff
-        └── test_018.ome.tiff
-        └── test_mcd.h5ad
-        └── scaling.json #used for rakaia visualization
-        └── 📁umap
-            └── umap_min_dist...coordinates.csv
-            └── umap_min_dist...png
-    └── 📁img # Multichannel Tiff folder
-        └── images.csv
-        └── test_018.tiff
-    └── 📁mcd
-        └── test.mcd
-    └── panel.csv # panel file containing all markers
-    └── panel_deepcell.csv # panel file containing markers for nuclear and cytoplasm segmentation
-    └── test_mcd.yaml
+├── config.yaml
+├── deepcell
+│ ├── cell
+│ │ └── test_018.tiff
+│ ├── nuclei
+│ │ └── test_018.tiff
+│ └── overlay
+│     └── test_018.tiff
+├── export
+│ ├── ome
+│ │ ├── test_018
+│ │ │ ├── ArAr80_80ArAr.tiff
+│ │ │ ├── Dy162_162Dy_h5454_Chr10SAT.tiff
+│ │ │ ├── Er166_166Er_h3838_Chr1SAT.tiff
+│ │ │ ├── Er167_167Er_h3838_Chr1SAT.tiff
+│ │ │ ├── Gd158_158Gd_h5050_Chr2SAT.tiff
+│ │ │ ├── Ir191_191Ir_DNA1.tiff
+│ │ │ ├── Ir193_193Ir_DNA2.tiff
+│ │ │ ├── Pb206_206Pb.tiff
+│ │ │ ├── Pb208_208Pb.tiff
+│ │ │ ├── test_018_mask.tiff
+│ │ │ ├── Xe126_126Xe.tiff
+│ │ │ ├── Xe131_131Xe.tiff
+│ │ │ └── Xe134_134Xe.tiff
+│ │ └── test_018.ome.tiff
+│ ├── scaling.json
+│ ├── test_mcd.h5ad
+│ └── umap
+│     ├── umap_min_dist_0.1_coordinates.csv
+│     ├── umap_min_dist_0.1.png
+│     ├── umap_min_dist_0.25_coordinates.csv
+│     ├── umap_min_dist_0.25.png
+│     ├── umap_min_dist_0.5_coordinates.csv
+│     ├── umap_min_dist_0.5.png
+│     ├── umap_min_dist_0_coordinates.csv
+│     ├── umap_min_dist_0.png
+│     ├── umap_min_dist_1_coordinates.csv
+│     └── umap_min_dist_1.png
+├── img
+│ ├── images.csv
+│ └── raw
+│     └── test_018.tiff
+├── mcd
+│ └── test.mcd
+├── panel.csv
+├── panel_deepcell.csv
+└── quantification
+    ├── intensities
+    │ └── test_018.csv
+    ├── neighbors
+    │ └── test_018.csv
+    └── regionprops
+        └── test_018.csv
 ```
+
+To note:
+
+- The `overlay` directory in the `deepcell` output contains
+an RGB image for every processed ROI with the nuclear channels in green, 
+and the cell segmentation boundaries projected on top in white
