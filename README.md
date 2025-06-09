@@ -238,6 +238,7 @@ The pipeline output directory structure for the current version is as follows:
 │ ├── images.csv
 │ └── raw
 │     └── test_018.tiff
+  └── raw_not_quantified
 ├── mcd
 │ └── test.mcd
 ├── panel.csv
@@ -256,3 +257,18 @@ To note:
 - The `overlay` directory in the `deepcell` output contains
 an RGB image for every processed ROI with the nuclear channels in green, 
 and the cell segmentation boundaries projected on top in white
+
+
+## Limitations
+
+### `panopticicnet` `ValueError` cell segmentations
+
+The current version of the `deepcell` pipeline may throw the error
+described above for abnormally shaped ROIs (i.e. 850x100 pixels). 
+This error is documented here: https://github.com/vanvalenlab/deepcell-tf/issues/735
+
+ROIs that suffer from this error will have a `raw` image tiff 
+created, but will silently fail the cel segmentation step. In order to
+allow ROi quantification to proceed successfully, these ROI tiffs are 
+moved into `raw_not_quantified` in the `img` directory, and 
+are not included in any downstream analyses (neighborhood, clustering, etc.)

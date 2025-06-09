@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Conditional parse of txt files or mcd (mcd by default) using config `process_txt` #26
 - scaling JSON for rakaia now supports parsing .txt files #33
 
+### Fixed
+
+- raw tiff ROIs that trigger a `panopticnet` `ValueError` on cell segmentation 
+will be moved to `raw_not_quantified` #36
+
 ### Removed
 
 - Duplicate script files and directories

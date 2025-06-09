@@ -60,7 +60,7 @@ def main(sysargs=sys.argv[1:]):
         mask = f"{args.mask}/{roi_base}.tiff"
         with TiffFile(mask) as mask_open:
             mask = mask_open.asarray().astype(np.uint32)
-            H_mask, W_mask = mask.shape
+            H_mask, W_mask = np.squeeze(mask).shape
 
         overlay_data = make_outline_overlay(rgb_data=rgb_nuc,
                     predictions=mask.reshape(1, H_mask, W_mask, 1))

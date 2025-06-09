@@ -8,7 +8,8 @@ rule extract_intensities:
     input:
         masks = rules.deepcell_wholecell.output,
         img = rules.generate_tiff.output.tiff_folder,
-        panel = rules.create_panel.output.panel
+        panel = rules.create_panel.output.panel,
+        log = rules.match_segmentation_files_for_quantification.output.out_log
     params:
         aggr = config["aggr"]
     output:

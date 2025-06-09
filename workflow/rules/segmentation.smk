@@ -2,7 +2,8 @@ deepcell = {
     "panel_deepcell": expand("data/{projects}/panel_deepcell.csv", projects = projects),
     "deepcell_nuclei": expand("data/{projects}/deepcell/nuclei", projects = projects),
     "deepcell_wholecell": expand("data/{projects}/deepcell/cell", projects = projects),
-    "deepcell_overlay": expand("data/{projects}/deepcell/overlay", projects = projects)
+    "deepcell_overlay": expand("data/{projects}/deepcell/overlay", projects = projects),
+    "match_segmentation_files_for_quantification": expand("data/{projects}/logs/clean_unmatched_files.done", projects = projects)
 }
 
 rule deepcell_prepare:
@@ -78,6 +79,21 @@ rule deepcell_wholecell:
             --pixelsize {params.px_size} \
             -o {output} \
             -v DEBUG
+        """
+
+rule match_segmentation_files_for_quantification:
+    input:
+        dir = rules.deepcell_wholecell.output
+    output:
+        out_log = temp("data/{projects}/logs/clean_unmatched_files.done")
+    params:
+        raw_tiff = rules.generate_tiff.output.tiff_folder
+    shell:
+        """
+        mkdir -p "$(dirname {params.raw_tiff})/raw_not_quantified" && \
+        comm -23 <(ls {params.raw_tiff} | sort) <(ls {input.dir} | sort) \
+        | xargs -r -I{{}} mv "{params.raw_tiff}/{{}}" "$(dirname {params.raw_tiff})/raw_not_quantified/"
+        touch {output}
         """
 
 rule nuclear_overlay:
