@@ -32,13 +32,16 @@ jobs:
           CONDA_OVERRIDE_CUDA: "11.8"
       - name: Set up integration test data directory
         shell: bash -l {0}
-        run: mkdir data && cp -r tests/test_mcd data/ && cp -r tests/test_txt data/
+        run: mkdir data && cp -r tests/test_mcd data/ && cp -r tests/test_txt data/ && cp -r tests/test_tiff data/
       - name: Run pipeline with mcd
         shell: bash -l {0}
         run: snakemake --cores all --configfile data/test_mcd/config.yaml
       - name: Run pipeline with txt
         shell: bash -l {0}
         run: snakemake --cores all --configfile data/test_txt/config.yaml
+      - name: Run pipeline with tiff
+        shell: bash -l {0}
+        run: snakemake --cores all --configfile data/test_tiff/config.yaml
       - name: Install and run pytest
         shell: bash -l {0}
         run: |

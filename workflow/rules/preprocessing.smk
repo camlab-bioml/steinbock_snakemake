@@ -1,9 +1,9 @@
 version: "0.0.6"
 
 preprocessing_output = {
-    "panel": expand("data/{projects}/panel.csv", projects = projects),
-    "tiff_folder": expand("data/{projects}/img/raw", projects = projects),
-    "tiff_metadata": expand("data/{projects}/img/images.csv", projects = projects)
+    "panel": expand("data/{projects}/panel.csv", projects = projects) if not process_tiff else [],
+    "tiff_folder": expand("data/{projects}/img/raw", projects = projects) if not process_tiff else [],
+    "tiff_metadata": expand("data/{projects}/img/images.csv", projects = projects) if not process_tiff else []
 }
 
 rule create_panel:
@@ -11,30 +11,32 @@ rule create_panel:
         mcd = "data/{projects}/mcd"
     output:
         panel = "data/{projects}/panel.csv"
-    conda: "steinbock-snakemake"
     params:
         type = "mcd" if not process_txt else "txt"
-    shell:
-        """
-        steinbock preprocess imc panel \
+    run:
+        if not process_tiff:
+            shell(
+            """
+            steinbock preprocess imc panel \
             --{params.type} {input.mcd} \
             -o {output} \
             --verbosity INFO
-        """
+            """)
 
 rule generate_tiff:
     input:
         panel = rules.create_panel.output,
-        mcd = "data/{projects}/mcd"
+        mcd = "data/{projects}/mcd" if not process_tiff else []
     params:
         hpf = config['hpf']
     output:
-        tiff_folder = directory("data/{projects}/img/raw"),
-        tiff_metadata = "data/{projects}/img/images.csv"
-    conda: "steinbock-snakemake"
-    shell:
-        """
-        steinbock preprocess imc images --mcd {input.mcd} \
+        tiff_folder = directory("data/{projects}/img/raw") if not process_tiff else [],
+        tiff_metadata = "data/{projects}/img/images.csv" if not process_tiff else []
+    run:
+        if not process_tiff:
+            shell(
+            """
+            steinbock preprocess imc images --mcd {input.mcd} \
                                         --txt {input.mcd} \
                                         --panel {input.panel} \
                                         --imgout {output.tiff_folder} \
@@ -42,4 +44,4 @@ rule generate_tiff:
                                         --infoout {output.tiff_metadata} \
                                         --verbosity DEBUG \
                                         --strict True
-        """
+            """)

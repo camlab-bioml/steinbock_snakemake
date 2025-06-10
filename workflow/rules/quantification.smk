@@ -7,8 +7,8 @@ quantification = {
 rule extract_intensities:
     input:
         masks = rules.deepcell_wholecell.output,
-        img = rules.generate_tiff.output.tiff_folder,
-        panel = rules.create_panel.output.panel,
+        img = rules.generate_tiff.output.tiff_folder if not process_tiff else config['tiff_path'],
+        panel = rules.deepcell_prepare.output.panel_deepcell if not process_tiff else config['panel_tiff'],
         log = rules.match_segmentation_files_for_quantification.output.out_log
     params:
         aggr = config["aggr"]
@@ -52,7 +52,7 @@ rule extract_neighbors:
 rule extract_regionprops:
     input:
         masks = rules.deepcell_wholecell.output,
-        img = rules.generate_tiff.output.tiff_folder
+        img = rules.generate_tiff.output.tiff_folder if not process_tiff else config['tiff_path'],
     params:
         aggr = config["aggr"]
     output:

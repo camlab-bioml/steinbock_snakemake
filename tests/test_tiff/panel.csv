@@ -1,0 +1,13 @@
+channel,name,keep,ilastik,deepcell,cellpose
+channel_1,80ArAr,1,1,,
+channel_2,126Xe,1,2,,
+channel_3,131Xe,1,3,,
+channel_4,134Xe,1,4,,
+channel_5,158Gd_h5050_Chr2SAT,1,5,,
+channel_6,162Dy_h5454_Chr10SAT,1,6,,
+channel_7,166Er_h3838_Chr1SAT,1,7,,
+channel_8,167Er_h3838_Chr1SAT,1,8,,
+channel_9,191Ir_DNA1,1,9,,
+channel_10,193Ir_DNA2,1,10,,
+channel_11,206Pb,1,11,,
+channel_12,208Pb,1,12,,

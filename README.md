@@ -100,6 +100,43 @@ projects:
     - test_mcd
 ```
 
+### Processing tiff stacks
+
+By default, the pipeline will attempt to process either mcd or txt files
+in the `mcd` project directory. If users wish to start from raw tiff stacks,
+a few project configurations variables need to be specified:
+
+```commandline
+process_tiff: True
+tiff_path: 'data/from_tiff/tiff'
+panel_tiff: 'data/from_tiff/panel.csv'
+```
+
+users must set `process_tiff` to True to let the pipeline know to expect
+raw tiff as input. Additionally, since steinbock cannot parse out
+channel information from genertic tiffs, the panel must be specified beforehand. 
+An example panel.csv file template is as follows:
+
+```commandline
+channel     name    keep    ilastik     deepcell    cellpose
+channel_1   DNA1    1       1
+channel_2   DNA2    1       2
+channel_3   Cyto    1       3
+```
+
+In the configuration, users should specify the channels to segment
+based on the channel column:
+
+```commandline
+nuclear: 
+    - "channel_1"
+    - "channel_2"
+cytoplasm:
+    - "channel_3"
+```
+
+It is crucial that the channels specified in the configuratoin match to the channel column in the user-provided panel. 
+
 ### Channels for segmenting cells
 To help mesmer segment cells, steinbock will require the user to input the mass channels for cytoplasm specific markers (e.g panCK, Actin etc). You should include those channels under `cytoplasm` and `nuclear`
 ```

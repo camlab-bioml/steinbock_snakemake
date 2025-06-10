@@ -17,3 +17,7 @@ def get_steinbock_out_dir_mcd(get_parent_dir):
 @pytest.fixture(scope="module")
 def get_steinbock_out_dir_txt(get_parent_dir):
     return os.path.join(get_parent_dir, 'data', 'test_txt')
+
+@pytest.fixture(scope="module")
+def get_steinbock_out_dir_tiff(get_parent_dir):
+    return os.path.join(get_parent_dir, 'data', 'test_tiff')

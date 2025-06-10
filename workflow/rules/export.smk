@@ -8,14 +8,15 @@ export = {
 rule export_all:
     input:
         masks = rules.deepcell_wholecell.output,
-        img = rules.generate_tiff.output.tiff_folder,
-        imginfo = rules.generate_tiff.output.tiff_metadata,
-        panel = rules.create_panel.output,
+        img = rules.generate_tiff.output.tiff_folder if not process_tiff else config['tiff_path'],
+        imginfo = rules.generate_tiff.output.tiff_metadata if not process_tiff else [],
+        panel = rules.deepcell_prepare.output.panel_deepcell,
         intensities = rules.extract_intensities.output,
         regionprops = rules.extract_regionprops.output,
         neighbors = rules.extract_neighbors.output
     params:
-        aggr = config["aggr"]
+        aggr = config["aggr"],
+        use_info = "--info" if not process_tiff else ""
     output:
         dir = directory("data/{projects}/export/ome"),
         h5ad = temp("{projects}_export.h5ad")
@@ -25,7 +26,7 @@ rule export_all:
         """
         steinbock export ome --img {input.img} --panel {input.panel} -o {output.dir}
         steinbock export histocat --img {input.img} --masks {input.masks} --panel {input.panel} -o {output.dir}
-        steinbock export anndata --intensities {input.intensities} --data {input.regionprops} --neighbors {input.neighbors} --panel {input.panel} --info {input.imginfo} --format h5ad -o {output.h5ad}
+        steinbock export anndata --intensities {input.intensities} --data {input.regionprops} --neighbors {input.neighbors} --panel {input.panel} {params.use_info} {input.imginfo} --format h5ad -o {output.h5ad}
         """
 
 rule phenograph:
@@ -49,7 +50,7 @@ rule phenograph:
 rule umap:
     input:
         h5ad = rules.phenograph.output.h5ad,
-        panel = rules.create_panel.output
+        panel = rules.create_panel.output if not process_tiff else config['panel_tiff']
     params:
         script = "workflow/scripts/dimension_reduction.py",
         min_dist = lambda wildcards: wildcards.umap_dist,

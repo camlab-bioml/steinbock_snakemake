@@ -177,3 +177,84 @@ class SteinbockSnakemakeIntegrationTestsTXT(unittest.TestCase):
         assert os.path.isdir(overlay_path)
         overlay_roi = glob.glob(f"{overlay_path}/*.tiff")
         assert len(overlay_roi) == 1
+
+
+class SteinbockSnakemakeIntegrationTestsTIFF(unittest.TestCase):
+
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, get_steinbock_out_dir_tiff):
+        self.get_steinbock_out_dir_tiff = get_steinbock_out_dir_tiff
+
+    @pytest.mark.usefixtures("get_steinbock_out_dir_tiff")
+    def test_check_panel(self):
+        panel = pd.read_csv(os.path.join(self.get_steinbock_out_dir_tiff, 'panel.csv'))
+        assert panel.shape == (12, 6)
+
+    @pytest.mark.usefixtures("get_steinbock_out_dir_tiff")
+    def test_check_images(self):
+        image_dir = os.path.join(self.get_steinbock_out_dir_tiff, 'tiff')
+        raw = tifffile.imread(glob.glob(f'{image_dir}/*.tiff')[0])
+        assert raw.shape == (12, 500, 500)
+
+    @pytest.mark.usefixtures("get_steinbock_out_dir_tiff")
+    def test_check_masks(self):
+        mask = np.array(Image.open(os.path.join(self.get_steinbock_out_dir_tiff,
+                            'deepcell', 'cell', 'test.tiff'))).astype(np.uint32)
+        assert 500 <= np.max(mask) <= 600
+
+    @pytest.mark.usefixtures("get_steinbock_out_dir_tiff")
+    def test_check_intensities(self):
+        intensities = pd.read_csv(os.path.join(self.get_steinbock_out_dir_tiff, 'quantification',
+                                               'intensities', 'test.csv'))
+
+        assert intensities.shape[1] == 13
+        assert 500 <= intensities.shape[0] <= 600
+
+    @pytest.mark.usefixtures("get_steinbock_out_dir_tiff")
+    def test_check_export(self):
+        export_anndata = ad.read_h5ad(os.path.join(self.get_steinbock_out_dir_tiff,
+                                            'export', 'test_tiff.h5ad'))
+
+        assert 500 <= export_anndata.X.shape[0] <= 600
+        assert export_anndata.X.shape[1] == 12
+
+        assert 'phenograph' in export_anndata.obs
+        assert 'mask_id' in export_anndata.obs
+
+        for min_dist in [0, 0.1, 0.25, 0.5, 1]:
+            assert f'UMAP_min_dist_{min_dist}' in export_anndata.obsm
+            assert export_anndata.obsm[f'UMAP_min_dist_{min_dist}'].shape[1] == 2
+            assert 500 <= export_anndata.obsm[f'UMAP_min_dist_{min_dist}'].shape[0] <= 600
+
+        umap_coord_list = sorted([str(i) for i in Path(
+            os.path.join(self.get_steinbock_out_dir_tiff, 'export')).rglob('*coordinates.csv')])
+
+        assert len(umap_coord_list) == 5
+
+        for umap_dist in umap_coord_list:
+            umap_coordinates = pd.read_csv(umap_dist)
+            assert 500 <= umap_coordinates.shape[0] <= 600
+            assert umap_coordinates.shape[1] == 2
+
+        umap_plot_list = sorted([str(i) for i in Path(
+            os.path.join(self.get_steinbock_out_dir_tiff, 'export')).rglob('*.png')])
+
+        for min_dist in [0, 0.1, 0.25, 0.5, 1]:
+            assert (any([str(min_dist) in plot_file for plot_file in umap_plot_list]))
+
+        assert len(umap_plot_list) == 5
+
+    # currently, scaling not performed on tiff files
+    @pytest.mark.usefixtures("get_steinbock_out_dir_tiff")
+    def test_roi_scaling(self):
+        assert not os.path.isfile(os.path.join(self.get_steinbock_out_dir_tiff,
+                                'export', 'scaling.json'))
+
+
+    @pytest.mark.usefixtures("get_steinbock_out_dir_tiff")
+    def test_roi_nuclear_overlay(self):
+
+        overlay_path = os.path.join(self.get_steinbock_out_dir_tiff, 'deepcell', 'overlay')
+        assert os.path.isdir(overlay_path)
+        overlay_roi = glob.glob(f"{overlay_path}/*.tiff")
+        assert len(overlay_roi) == 1

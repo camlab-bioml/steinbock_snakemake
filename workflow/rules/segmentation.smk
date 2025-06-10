@@ -8,14 +8,13 @@ deepcell = {
 
 rule deepcell_prepare:
     input:
-        rules.create_panel.output
+        rules.create_panel.output if not process_tiff else config['panel_tiff']
     output:
         panel_deepcell = "data/{projects}/panel_deepcell.csv"
     params:
         script = "workflow/scripts/deepcell_prepare.py",
         cytoplasm = config["cytoplasm"],
         nuclear = config["nuclear"]
-    conda: "steinbock-snakemake"
     shell:
         """
         python {params.script} \
@@ -27,13 +26,14 @@ rule deepcell_prepare:
 
 rule deepcell_nuclei:
     input:
-        img = rules.generate_tiff.output.tiff_folder,
+        img = rules.generate_tiff.output.tiff_folder if not process_tiff else config['tiff_path'],
         panel = rules.deepcell_prepare.output.panel_deepcell
     params:
         app = config["deepcell_app"],
         model = config["deepcell_model"],
         model_path = config["deepcell_modelpath"],
-        px_size = config["deepcell_pxsize"]
+        px_size = config["deepcell_pxsize"],
+        min_max = "--minmax" if not process_tiff else ""
     output:
         directory("data/{projects}/deepcell/nuclei")
     conda: "steinbock-snakemake"
@@ -46,7 +46,7 @@ rule deepcell_nuclei:
             --modeldir {params.model_path} \
             --type nuclear \
             --img {input.img} \
-            --minmax \
+            {params.min_max} \
             --panel {input.panel} \
             --pixelsize {params.px_size} \
             -o {output} \
@@ -55,13 +55,14 @@ rule deepcell_nuclei:
 
 rule deepcell_wholecell:
     input:
-        img = rules.generate_tiff.output.tiff_folder,
-        panel = rules.deepcell_prepare.output
+        img = rules.generate_tiff.output.tiff_folder if not process_tiff else config['tiff_path'],
+        panel = rules.deepcell_prepare.output.panel_deepcell
     params:
         app = config["deepcell_app"],
         model = config["deepcell_model"],
         model_path = config["deepcell_modelpath"],
-        px_size = config["deepcell_pxsize"]
+        px_size = config["deepcell_pxsize"],
+        min_max = "--minmax" if not process_tiff else ""
     output:
         directory("data/{projects}/deepcell/cell")
     conda: "steinbock-snakemake"
@@ -74,7 +75,7 @@ rule deepcell_wholecell:
             --modeldir {params.model_path} \
             --type whole-cell \
             --img {input.img} \
-            --minmax \
+            {params.min_max} \
             --panel {input.panel} \
             --pixelsize {params.px_size} \
             -o {output} \
@@ -87,7 +88,7 @@ rule match_segmentation_files_for_quantification:
     output:
         out_log = temp("data/{projects}/logs/clean_unmatched_files.done")
     params:
-        raw_tiff = rules.generate_tiff.output.tiff_folder
+        raw_tiff = rules.generate_tiff.output.tiff_folder if not process_tiff else config['tiff_path']
     shell:
         """
         mkdir -p "$(dirname {params.raw_tiff})/raw_not_quantified" && \
@@ -98,7 +99,7 @@ rule match_segmentation_files_for_quantification:
 
 rule nuclear_overlay:
     input:
-        img = rules.generate_tiff.output.tiff_folder,
+        img = rules.generate_tiff.output.tiff_folder if not process_tiff else config['tiff_path'],
         panel = rules.deepcell_prepare.output.panel_deepcell,
         mask_dir = rules.deepcell_wholecell.output
     output:

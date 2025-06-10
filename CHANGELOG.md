@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `mask_id` segmentation ID column now part of `export.h5ad` .obs
 - RGB of nuclear markers + segmentation overlay in `deepcell`, `overlay` #28
+- Run starting with raw tiff stacks #34
 
 ### Changed
 
