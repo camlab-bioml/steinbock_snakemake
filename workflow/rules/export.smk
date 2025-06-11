@@ -32,7 +32,7 @@ rule export_all:
 rule phenograph:
     input:
         h5ad = rules.export_all.output.h5ad,
-        panel = rules.create_panel.output
+        panel = rules.create_panel.output if not process_tiff else config['panel_tiff']
     params:
         script = "workflow/scripts/phenograph_clustering.py",
         k = config["phenograph_k"],

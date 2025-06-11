@@ -78,7 +78,8 @@ def iterate_rois(import_file: Union[str, Path],
     elif str(import_file).endswith('.txt'):
         acq_reader = TXTFile(import_file)
         with acq_reader as txt_open:
-            rois = txt_open.read_acquisition()
+            # rois = txt_open.read_acquisition()
+            rois = None
             roi_identifiers = str(Path(import_file).stem)
         if not acq_channel_names and not acq_channel_labels:
             acq_channel_names = txt_open.channel_names
@@ -129,7 +130,7 @@ def main(sysargs=sys.argv[1:]):
     for file in files_to_process:
         reader, roi_to_read, channel_names, channel_labels, identifiers = iterate_rois(
             file, keywords_exclude, args.size_limit)
-        if isinstance(roi_to_read, list):
+        if roi_to_read and isinstance(roi_to_read, list):
             with reader as file_open:
                 for roi, acq_name in zip(roi_to_read, identifiers):
                     if args.verbose:
@@ -140,7 +141,9 @@ def main(sysargs=sys.argv[1:]):
         else:
             if args.verbose:
                 print('\033[32m' + f"Parsing ROI: {identifiers}")
-            channel_scales, aliases = append_roi_channel_subsets(channel_scales, aliases, roi_to_read,
+                with reader as file_open:
+                    roi_to_read = file_open.read_acquisition()
+                    channel_scales, aliases = append_roi_channel_subsets(channel_scales, aliases, roi_to_read,
                                                           channel_names, channel_labels)
     json_template = {"channels": {}, "config": {"blend": [], "filter": {"global_apply_filter":[],
                     "global_filter_type": 'median', "global_filter_val": 3, "global_filter_sigma": 1}},

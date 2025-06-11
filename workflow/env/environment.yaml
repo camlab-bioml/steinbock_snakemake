@@ -376,4 +376,4 @@ dependencies:
       - xtiff==0.7.9
       - zipp==3.20.2
 variables:
-  STEINBOCK_MASK_DTYPE: uint16
+  STEINBOCK_MASK_DTYPE: uint32

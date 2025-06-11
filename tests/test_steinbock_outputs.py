@@ -51,6 +51,9 @@ class SteinbockSnakemakeIntegrationTestsMCD(unittest.TestCase):
         assert 500 <= export_anndata.X.shape[0] <= 600
         assert export_anndata.X.shape[1] == 12
 
+        panel = pd.read_csv(os.path.join(self.get_steinbock_out_dir_mcd, 'panel.csv'))
+        assert all(str(elem) in export_anndata.var_names for elem in list(pd.Series(panel['name'])))
+
         assert 'phenograph' in export_anndata.obs
         assert 'mask_id' in export_anndata.obs
 
@@ -135,6 +138,9 @@ class SteinbockSnakemakeIntegrationTestsTXT(unittest.TestCase):
         assert 500 <= export_anndata.X.shape[0] <= 600
         assert export_anndata.X.shape[1] == 12
 
+        panel = pd.read_csv(os.path.join(self.get_steinbock_out_dir_txt, 'panel.csv'))
+        assert all(str(elem) in export_anndata.var_names for elem in list(pd.Series(panel['name'])))
+
         assert 'phenograph' in export_anndata.obs
         assert 'mask_id' in export_anndata.obs
 
@@ -217,6 +223,9 @@ class SteinbockSnakemakeIntegrationTestsTIFF(unittest.TestCase):
 
         assert 500 <= export_anndata.X.shape[0] <= 600
         assert export_anndata.X.shape[1] == 12
+
+        panel = pd.read_csv(os.path.join(self.get_steinbock_out_dir_tiff, 'panel.csv'))
+        assert all(str(elem) in export_anndata.var_names for elem in list(pd.Series(panel['name'])))
 
         assert 'phenograph' in export_anndata.obs
         assert 'mask_id' in export_anndata.obs

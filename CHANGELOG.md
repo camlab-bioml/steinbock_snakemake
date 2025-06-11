@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - raw tiff ROIs that trigger a `panopticnet` `ValueError` on cell segmentation 
 will be moved to `raw_not_quantified` #36
+- Enforce mask dtype is 32 byte integer in environment config
 
 ### Removed
 
