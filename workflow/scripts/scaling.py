@@ -128,23 +128,27 @@ def main(sysargs=sys.argv[1:]):
     for path in input_paths:
         files_to_process += list(chain(glob.glob(f"{path}/*.mcd"), glob.glob(f"{path}/*.txt")))
     for file in files_to_process:
-        reader, roi_to_read, channel_names, channel_labels, identifiers = iterate_rois(
-            file, keywords_exclude, args.size_limit)
-        if roi_to_read and isinstance(roi_to_read, list):
-            with reader as file_open:
-                for roi, acq_name in zip(roi_to_read, identifiers):
-                    if args.verbose:
-                        print('\033[32m' + f"Parsing ROI: {acq_name}")
-                    img = file_open.read_acquisition(roi)
-                    channel_scales, aliases = append_roi_channel_subsets(channel_scales,
-                                            aliases, img, channel_names, channel_labels)
-        else:
-            if args.verbose:
-                print('\033[32m' + f"Parsing ROI: {identifiers}")
+        try:
+            reader, roi_to_read, channel_names, channel_labels, identifiers = iterate_rois(
+                file, keywords_exclude, args.size_limit)
+            if roi_to_read and isinstance(roi_to_read, list):
                 with reader as file_open:
-                    roi_to_read = file_open.read_acquisition()
-                    channel_scales, aliases = append_roi_channel_subsets(channel_scales, aliases, roi_to_read,
-                                                          channel_names, channel_labels)
+                    for roi, acq_name in zip(roi_to_read, identifiers):
+                        if args.verbose:
+                            print('\033[32m' + f"Parsing ROI: {acq_name}")
+                        img = file_open.read_acquisition(roi, strict=False)
+                        channel_scales, aliases = append_roi_channel_subsets(channel_scales,
+                                                aliases, img, channel_names, channel_labels)
+            else:
+                if args.verbose:
+                    print('\033[32m' + f"Parsing ROI: {identifiers}")
+                    with reader as file_open:
+                        roi_to_read = file_open.read_acquisition()
+                        channel_scales, aliases = append_roi_channel_subsets(channel_scales, aliases, roi_to_read,
+                                                                             channel_names, channel_labels)
+
+        except (IOError, OSError):
+            pass
     json_template = {"channels": {}, "config": {"blend": [], "filter": {"global_apply_filter":[],
                     "global_filter_type": 'median', "global_filter_val": 3, "global_filter_sigma": 1}},
                     "cluster": None, "gating": None}
