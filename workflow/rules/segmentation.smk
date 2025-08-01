@@ -89,6 +89,8 @@ rule match_segmentation_files_for_quantification:
         out_log = temp("data/{projects}/logs/clean_unmatched_files.done")
     params:
         raw_tiff = rules.generate_tiff.output.tiff_folder if not process_tiff else config['tiff_path']
+    conda: "steinbock-snakemake"
+    threads: 2
     shell:
         """
         mkdir -p "$(dirname {params.raw_tiff})/raw_not_quantified" && \
@@ -106,6 +108,8 @@ rule nuclear_overlay:
         directory("data/{projects}/deepcell/overlay")
     params:
         script = "workflow/scripts/nuclear_overlay.py"
+    conda: "steinbock-snakemake"
+    threads: 2
     shell:
         """
         mkdir -p {output}

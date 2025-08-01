@@ -11,8 +11,8 @@ rule create_panel:
         mcd = "data/{projects}/mcd"
     output:
         panel = "data/{projects}/panel.csv" if not process_tiff else []
-    conda:
-        "steinbock-snakemake"
+    conda: "steinbock-snakemake"
+    threads: 2
     params:
         type = "mcd" if not process_txt else "txt"
     shell:
@@ -35,6 +35,7 @@ rule generate_tiff:
         tiff_metadata = "data/{projects}/img/images.csv" if not process_tiff else []
     conda:
         "steinbock-snakemake"
+    threads: 2
     shell:
         """
         steinbock preprocess imc images \

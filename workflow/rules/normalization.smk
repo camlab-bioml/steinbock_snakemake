@@ -8,6 +8,7 @@ rule scaling:
     output:
         json = "data/{projects}/export/scaling.json" if not process_tiff else []
     threads: 1
+    conda: "steinbock-snakemake"
     params:
         script = "workflow/scripts/scaling.py",
         mode = config["scaling_mode"] if "scaling_mode" in config else "mean",
