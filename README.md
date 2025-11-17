@@ -13,8 +13,8 @@ The `steinbock` functionality is wrapped with [snakemake](https://snakemake.read
 We will first set up the pipeline environment via conda and pip. This will install all dependencies including snakemake and singularity for use.
 
 ```
-git clone https://github.com/camblab-bioml/steinbock_snakemake && cd steinbock_snakemake # clone git repo, then move into the pipeline folder. 
-conda env create -y --file=workflow/env/environment.yml
+git clone https://github.com/camlab-bioml/steinbock_snakemake && cd steinbock_snakemake # clone git repo, then move into the pipeline folder. 
+conda env create -y --file=workflow/env/environment.yaml
 conda activate steinbock-snakemake
 ```
 
@@ -161,7 +161,7 @@ can confound the cluster assignment and UMAP coordinates for IMC datasets and ma
 To remove these channels from these tasks, users should set the `channels_ignore_umap` config input as follows:
 
 ```
-channels_ignore_umap: "ArAr80 Xe126 Xe131 Xe134" # proper syntax is space separated for each channel
+channels_ignore_umap: "ArAr80 Xe126 Xe131 Xe134 Pb206 Pb208" # proper syntax is space separated for each channel
 ```
 In the example above, the pipeline will ignore 4 channels corresponding to gas measurements.
 This often leads to cleaner phenograph cluster assignments and better resolution for UMAPs.
@@ -223,7 +223,14 @@ snakefile: "workflow/Snakefile" # location of Snakefile
 After that, make sure you are in the `steinbock_snakemake` root folder with an environment containing the `snakemake` command, and run the pipeline.
 
 ```
-snakemake --workflow-profile workflow/profiles/test_mcd
+snakemake --cores 4 --workflow-profile workflow/profiles/test_mcd
+```
+
+Conversely, you can run the pipeline by directly specifying the config file
+to run:
+
+```commandline
+snakemake --cores 4 --configfile data/test_mcd/config.yaml
 ```
 
 ### Inspect pipeline outputs
@@ -293,8 +300,21 @@ To note:
 
 - The `overlay` directory in the `deepcell` output contains
 an RGB image for every processed ROI with the nuclear channels in green, 
-and the cell segmentation boundaries projected on top in white
+and the `cell` segmentation mask boundaries projected on top in white
 
+## Important notes on outputs
+
+- The `nuclei` and `cell` masks output for every ROI have
+fundamentally different collections of segmentation objects. Usually, the
+number of segmented objects between the `nuclei` and `cell` mask
+for one ROI **WILL NOT BE THE SAME**
+- The mask IDs between the `nuclei` and `cell` masks **DO NOT MATCH**
+or correspond to the same object i.e. Object ID #100 in the `nuclei` mask
+and #100 in the `cell` mask represent completely different segmented objects. To 
+find matched/corresponding objects between the two masks, registration and 
+alignment is required and is not performed by the pipeline
+- The quantification (i.e. intensity) data matches **ONLY** to the `cell` masks,
+and **CANNOT** be used with the `nuclei` mask.
 
 ## Limitations
 
