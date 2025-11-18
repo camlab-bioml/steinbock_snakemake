@@ -201,6 +201,17 @@ The UMAP coordinates for every distance used are stored in the `umap` sub-direct
 `export` output directory. Each distance is also plotted alongside the phenograph clustering to
 give users a general idea of cluster dispersion for different distance metrics. 
 
+### Quantifying nuclear segmentation
+
+By default, only the whole cell segmentation objects are quantified
+by the pipeline and stored in `quantification`. To enable nuclear mask segmentation outputs
+in the `quantification` directory, add this line to the config:
+
+```commandline
+quantify_nuclei: True
+```
+
+The pipeline will then output all nuclear quantification in the `nuclear` subdirectory of `quantification`
 
 ### Project specific configuration
 After editing `config.yml`, we would want to ensure we use the same settings for each project. A simple solution is to copy the `config.yml` file over to the project directory before calling the snakemake, and directing it to the config file. 
@@ -287,6 +298,8 @@ The pipeline output directory structure for the current version is as follows:
     │ └── test_018.csv
     └── regionprops
         └── test_018.csv
+    ├── nuclei
+      └── .....
 ```
 
 To note:

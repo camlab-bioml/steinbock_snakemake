@@ -79,6 +79,14 @@ class SteinbockSnakemakeIntegrationTestsMCD(unittest.TestCase):
             assert (any([str(min_dist) in plot_file for plot_file in umap_plot_list]))
 
         assert len(umap_plot_list) == 5
+    
+    # for just the mcd, quantify the nuclei expression in addition to the cell mask
+    @pytest.mark.usefixtures("get_steinbock_out_dir_mcd")
+    def test_check_quantify_nuclei(self):
+        intensities = pd.read_csv(os.path.join(self.get_steinbock_out_dir_mcd, 'quantification',
+                                               'nuclei', 'intensities', 'test_018.csv'))
+        assert intensities.shape[1] == 13
+        assert 500 <= intensities.shape[0] <= 600
 
     @pytest.mark.usefixtures("get_steinbock_out_dir_mcd")
     def test_roi_scaling(self):

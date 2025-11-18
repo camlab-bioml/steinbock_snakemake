@@ -4,6 +4,7 @@ channels_ignore = config['channels_ignore_umap'] if 'channels_ignore_umap' in co
 process_txt = config['process_txt'] if 'process_txt' in config else False
 process_tiff = config['process_tiff'] if 'process_tiff' in config else False
 strict_parsing = str(config['strict_parsing']) if 'strict_parsing' in config else 'True'
+quantify_nuclei = config['quantify_nuclei'] if 'quantify_nuclei' in config else False
 
 # Rule Mesmer Pipeline: Deepcell segmentation
 include: "rules/preprocessing.smk"
