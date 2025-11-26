@@ -24,4 +24,4 @@ phenograph_min_cluster_size: 10
 
 process_txt: False # set to True if processing txt files
 
-channels_ignore_umap: "ArAr80 Xe126 Xe131 Xe134" # example of ignoring 4 gas channels in downstream analysis
+channels_ignore_umap: "ArAr80 Xe126 Xe131 Xe134 Pb206 Pb208" # example of ignoring 4 gas channels in downstream analysis
