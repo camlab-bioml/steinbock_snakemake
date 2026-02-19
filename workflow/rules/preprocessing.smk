@@ -1,4 +1,4 @@
-version: "0.0.6"
+version: "0.0.7"
 
 preprocessing_output = {
     "panel": expand("data/{projects}/panel.csv", projects = projects) if not process_tiff else [],
@@ -29,7 +29,8 @@ rule generate_tiff:
         mcd = "data/{projects}/mcd" if not process_tiff else []
     params:
         hpf = config['hpf'],
-        skip = process_tiff
+        skip = process_tiff,
+        strict = str(strict_parsing)
     output:
         tiff_folder = directory("data/{projects}/img/raw") if not process_tiff else [],
         tiff_metadata = "data/{projects}/img/images.csv" if not process_tiff else []
@@ -46,5 +47,5 @@ rule generate_tiff:
                 --hpf {params.hpf} \
                 --infoout {output.tiff_metadata} \
                 --verbosity DEBUG \
-                --strict True
+                --strict {params.strict}
         """

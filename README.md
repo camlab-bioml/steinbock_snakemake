@@ -1,4 +1,4 @@
-# Steinbock-snakemake v0.0.6
+# Steinbock-snakemake v0.0.7
 
 ## Overview
 
@@ -201,6 +201,17 @@ The UMAP coordinates for every distance used are stored in the `umap` sub-direct
 `export` output directory. Each distance is also plotted alongside the phenograph clustering to
 give users a general idea of cluster dispersion for different distance metrics. 
 
+### Quantifying nuclear segmentation
+
+By default, only the whole cell segmentation objects are quantified
+by the pipeline and stored in `quantification`. To enable nuclear mask segmentation outputs
+in the `quantification` directory, add this line to the config:
+
+```commandline
+quantify_nuclei: True
+```
+
+The pipeline will then output all nuclear quantification in the `nuclear` subdirectory of `quantification`
 
 ### Project specific configuration
 After editing `config.yml`, we would want to ensure we use the same settings for each project. A simple solution is to copy the `config.yml` file over to the project directory before calling the snakemake, and directing it to the config file. 
@@ -294,6 +305,8 @@ The pipeline output directory structure for the current version is as follows:
     │ └── test_018.csv
     └── regionprops
         └── test_018.csv
+    ├── nuclei
+      └── .....
 ```
 
 To note:
@@ -301,6 +314,30 @@ To note:
 - The `overlay` directory in the `deepcell` output contains
 an RGB image for every processed ROI with the nuclear channels in green, 
 and the `cell` segmentation mask boundaries projected on top in white
+
+## Troubleshooting
+
+### Corrupted ROIs
+
+ROIs from mcd may experience corruption during acquisition; this can
+manifest with the following pipeline error warnings:
+
+- `inconsistent image data size`
+- `invalid acquisition image data offsets`
+
+By default, steinbock will skip ROIs with these error warnings without
+killing the pipeline, and the resulting output files will not include any tiff stacks,
+segmentation masks, or quantification profiles for these ROIs. If the user
+wishes to include these ROIs in analysis, it may be possible to include incomplete ROIs
+by specifying `strict_parsing: False` in the config file. 
+\
+\
+**NOTE**: depending on the nature of the error, including these corrupted ROIs
+could lead to misleading or incomplete analysis results, or the inclusion of 
+batch effects. For example, some errors based on acquisition data sizes may include only a small 
+portion of the intended ROI acquisition area, limiting interpretability. Conversely,
+some errors for image data offsets occur for ROIs that have no marker signal for any of the 
+ROI channels; these ROIs are skipped entirely even when strict parsing is diabled. 
 
 ## Important notes on outputs
 
